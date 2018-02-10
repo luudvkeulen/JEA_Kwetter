@@ -14,8 +14,9 @@ import javax.persistence.TemporalType;
 
 @Entity
 public class Tweet implements Serializable {
-    
-    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     private String message;
     @Temporal(TemporalType.TIMESTAMP)
@@ -27,18 +28,35 @@ public class Tweet implements Serializable {
     private List<User> likes;
     @OneToMany
     private List<User> mentions;
-    
+
     public Tweet() {
     }
-    
+
+    public Tweet(String message, User user) {
+        this.message = message;
+        this.tweetedBy = user;
+    }
+
+    public Tweet(String message, User user, List<String> tags) {
+        this.message = message;
+        this.tweetedBy = user;
+        this.tags = tags;
+    }
+
     public boolean like(User user) {
-        if(user == null) return false;
-        if(likes.contains(user)) return false;
+        if (user == null) {
+            return false;
+        }
+        if (likes.contains(user)) {
+            return false;
+        }
         return likes.add(user);
     }
-    
+
     public boolean unlike(User user) {
-        if(user == null) return false;
+        if (user == null) {
+            return false;
+        }
         return likes.remove(user);
     }
 }

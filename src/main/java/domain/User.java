@@ -14,7 +14,9 @@ import javax.persistence.OneToMany;
 
 @Entity
 public class User implements Serializable {
-    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     private String picture;
     private String website;
@@ -22,7 +24,7 @@ public class User implements Serializable {
     private String lastName;
     private String bio;
     private String location;
-    @Column(unique=true)
+    @Column(unique = true)
     private String email;
     private String password;
     @Enumerated(EnumType.ORDINAL)
@@ -35,9 +37,9 @@ public class User implements Serializable {
     private List<User> followers;
 
     public User() {
-        
+
     }
-    
+
     public User(String picture, String website, String firstName, String lastName, String bio, String location, String email, String password) {
         this.picture = picture;
         this.website = website;
@@ -51,47 +53,66 @@ public class User implements Serializable {
         this.tweets = new ArrayList<>();
         this.following = new ArrayList<>();
     }
-    
+
     public boolean follow(User user) {
-        if(user == null) return false;
-        if(following.contains(user)) return false;
+        if (user == null) {
+            return false;
+        }
+        if (following.contains(user)) {
+            return false;
+        }
         return following.add(user);
     }
-    
+
     public boolean unfollow(User user) {
         return following.remove(user);
     }
-    
+
     public UserRole promote() {
-        switch(userRole) {
-            case USER: 
+        switch (userRole) {
+            case USER:
                 userRole = UserRole.MODERATOR;
                 break;
             case MODERATOR:
                 userRole = UserRole.ADMIN;
                 break;
         }
-        
+
         return userRole;
     }
-    
+
     public UserRole demote() {
-        switch(userRole) {
+        switch (userRole) {
             case MODERATOR:
                 userRole = UserRole.USER;
                 break;
-            case ADMIN: 
+            case ADMIN:
                 userRole = UserRole.MODERATOR;
                 break;
         }
-        
+
         return userRole;
+    }
+
+    public boolean addFollower(User user) {
+        if (user == null) {
+            return false;
+        }
+        if (this.followers.contains(user)) {
+            return false;
+        }
+        if (!user.addFollower(this)) {
+            return false;
+        }
+        return this.followers.add(user);
     }
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof User) return false;
-        User otherUser = (User)obj;
+        if (obj instanceof User) {
+            return false;
+        }
+        User otherUser = (User) obj;
         return this.email.equals(otherUser.email);
     }
 
@@ -99,6 +120,5 @@ public class User implements Serializable {
     public int hashCode() {
         return super.hashCode();
     }
-    
-    
+
 }
