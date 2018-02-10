@@ -3,6 +3,7 @@ package domain;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -118,7 +119,17 @@ public class User implements Serializable {
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        int hash = 5;
+        hash = 59 * hash + Objects.hashCode(this.picture);
+        hash = 59 * hash + Objects.hashCode(this.website);
+        hash = 59 * hash + Objects.hashCode(this.firstName);
+        hash = 59 * hash + Objects.hashCode(this.lastName);
+        hash = 59 * hash + Objects.hashCode(this.bio);
+        hash = 59 * hash + Objects.hashCode(this.location);
+        hash = 59 * hash + Objects.hashCode(this.email);
+        hash = 59 * hash + Objects.hashCode(this.password);
+        hash = 59 * hash + Objects.hashCode(this.userRole);
+        return hash;
     }
 
 }

@@ -3,6 +3,7 @@ package domain;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -58,5 +59,20 @@ public class Tweet implements Serializable {
             return false;
         }
         return likes.remove(user);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 47 * hash + Objects.hashCode(this.message);
+        hash = 47 * hash + Objects.hashCode(this.published);
+        hash = 47 * hash + Objects.hashCode(this.tags);
+        hash = 47 * hash + Objects.hashCode(this.tweetedBy);
+        return hash;
     }
 }
