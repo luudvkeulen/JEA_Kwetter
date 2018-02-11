@@ -2,9 +2,12 @@ package domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,13 +26,13 @@ public class Tweet implements Serializable {
     private String message;
     @Temporal(TemporalType.TIMESTAMP)
     private Date published;
-    private List<String> tags;
+    private List<String> tags = new ArrayList<>();
     @OneToOne
     private User tweetedBy;
     @OneToMany
-    private List<User> likes;
+    private List<User> likes = new ArrayList<>();
     @OneToMany
-    private List<User> mentions;
+    private List<User> mentions = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -44,7 +47,7 @@ public class Tweet implements Serializable {
     }
 
     public List<String> getTags() {
-        return tags;
+        return Collections.unmodifiableList(tags);
     }
 
     public User getTweetedBy() {
@@ -52,28 +55,22 @@ public class Tweet implements Serializable {
     }
 
     public List<User> getLikes() {
-        return likes;
+        return Collections.unmodifiableList(likes);
     }
 
     public List<User> getMentions() {
-        return mentions;
+        return Collections.unmodifiableList(mentions);
     }
 
     public Tweet() {
-        tags = new ArrayList<>();
-        mentions = new ArrayList<>();
-        likes = new ArrayList<>();
+
     }
 
     public Tweet(String message, User user) {
-        this();
         this.message = message;
         this.tweetedBy = user;
-    }
-
-    public Tweet(String message, User user, List<String> tags) {
-        this(message, user);
-        this.tags = tags;
+        //this.mentions = findMentions(message);
+        this.tags = findTags(message);
     }
 
     public boolean like(User user) {
@@ -91,6 +88,26 @@ public class Tweet implements Serializable {
             return false;
         }
         return likes.remove(user);
+    }
+    
+    private List<String> findMentions(String message) {
+        List<String> foundMentions = findRegexMatches(message, "(?:\\s@)([A-Za-z0-9_]+)");
+        //TODO Find user based on mention    
+        return foundMentions;
+    }
+    
+    private List<String> findTags(String message) {
+        return findRegexMatches(message, "(?:\\s#)([A-Za-z0-9_]+)");
+    }
+    
+    private List<String> findRegexMatches(String message, String regex) {
+        List<String> matches = new ArrayList<>();
+        String prefixedString = " ".concat(message);
+        Matcher m = Pattern.compile(regex).matcher(prefixedString);
+        while(m.find()) {
+            matches.add(m.group(1));
+        }
+        return matches;
     }
 
     @Override
