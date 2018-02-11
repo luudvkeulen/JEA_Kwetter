@@ -38,21 +38,26 @@ public class User implements Serializable {
     private List<User> followers;
 
     public User() {
-
+        this.userRole = UserRole.USER;
+        this.tweets = new ArrayList<>();
+        this.following = new ArrayList<>();
+    }
+    
+    public User(String email, String password) {
+        this();
+        this.email = email;
+        this.password = password;
     }
 
     public User(String picture, String website, String firstName, String lastName, String bio, String location, String email, String password) {
+        this(email, password);
         this.picture = picture;
         this.website = website;
         this.firstName = firstName;
         this.lastName = lastName;
         this.bio = bio;
         this.location = location;
-        this.email = email;
-        this.password = password;
-        this.userRole = UserRole.USER;
-        this.tweets = new ArrayList<>();
-        this.following = new ArrayList<>();
+        
     }
 
     public boolean follow(User user) {
@@ -110,7 +115,8 @@ public class User implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof User) {
+        if(obj == null) return false;
+        if (!(obj instanceof User)) {
             return false;
         }
         User otherUser = (User) obj;

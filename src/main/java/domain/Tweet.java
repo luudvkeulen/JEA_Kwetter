@@ -1,6 +1,7 @@
 package domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -30,17 +31,48 @@ public class Tweet implements Serializable {
     @OneToMany
     private List<User> mentions;
 
+    public Long getId() {
+        return id;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public Date getPublished() {
+        return published;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public User getTweetedBy() {
+        return tweetedBy;
+    }
+
+    public List<User> getLikes() {
+        return likes;
+    }
+
+    public List<User> getMentions() {
+        return mentions;
+    }
+
     public Tweet() {
+        tags = new ArrayList<>();
+        mentions = new ArrayList<>();
+        likes = new ArrayList<>();
     }
 
     public Tweet(String message, User user) {
+        this();
         this.message = message;
         this.tweetedBy = user;
     }
 
     public Tweet(String message, User user, List<String> tags) {
-        this.message = message;
-        this.tweetedBy = user;
+        this(message, user);
         this.tags = tags;
     }
 
