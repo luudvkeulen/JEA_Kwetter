@@ -1,9 +1,10 @@
 package domain;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -29,22 +30,71 @@ public class User implements Serializable {
     private String email;
     private String password;
     @Enumerated(EnumType.ORDINAL)
-    private UserRole userRole;
+    private UserRole userRole = UserRole.USER;
     @OneToMany
-    private List<Tweet> tweets;
+    private final Set<Tweet> tweets = new HashSet<>();
     @OneToMany
-    private List<User> following;
+    private final Set<User> following = new HashSet<>();
     @OneToMany
-    private List<User> followers;
+    private final Set<User> followers = new HashSet<>();
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public UserRole getUserRole() {
+        return userRole;
+    }
+
+    public Set<Tweet> getTweets() {
+        return Collections.unmodifiableSet(tweets);
+    }
+
+    public Set<User> getFollowing() {
+        return Collections.unmodifiableSet(following);
+    }
+
+    public Set<User> getFollowers() {
+        return Collections.unmodifiableSet(followers);
+    }
 
     public User() {
-        this.userRole = UserRole.USER;
-        this.tweets = new ArrayList<>();
-        this.following = new ArrayList<>();
+
     }
-    
+
     public User(String email, String password) {
-        this();
         this.email = email;
         this.password = password;
     }
@@ -57,21 +107,41 @@ public class User implements Serializable {
         this.lastName = lastName;
         this.bio = bio;
         this.location = location;
-        
+
     }
 
     public boolean follow(User user) {
-        if (user == null) {
+        if (user == null || user == this) {
             return false;
         }
-        if (following.contains(user)) {
+
+        if(!user.addFollower(this)) {
             return false;
         }
+        
         return following.add(user);
     }
 
     public boolean unfollow(User user) {
+        user.removeFollower(this);
         return following.remove(user);
+    }
+    
+    private boolean addFollower(User user) {
+        if(user == null || user == this) {
+            return false;
+        }
+        
+        followers.add(user);
+        return true;
+    }
+    
+    private boolean removeFollower(User user) {
+        if(user == null) {
+            return false;
+        }
+        
+        return followers.remove(user);
     }
 
     public UserRole promote() {
@@ -100,26 +170,16 @@ public class User implements Serializable {
         return userRole;
     }
 
-    public boolean addFollower(User user) {
-        if (user == null) {
-            return false;
-        }
-        if (this.followers.contains(user)) {
-            return false;
-        }
-        if (!user.addFollower(this)) {
-            return false;
-        }
-        return this.followers.add(user);
-    }
-
     @Override
     public boolean equals(Object obj) {
-        if(obj == null) return false;
+        if (obj == null) {
+            return false;
+        }
         if (!(obj instanceof User)) {
             return false;
         }
         User otherUser = (User) obj;
+        if(this.email == null || otherUser.email == null) return false;
         return this.email.equals(otherUser.email);
     }
 

@@ -30,18 +30,15 @@ public class TweetTest {
     public void tearDown() {
     }
     
+    /**
+     * Test of constructor, of class Tweet.
+     */
     @Test
-    public void testConstructors() {
+    public void testConstructor() {
         User testUser = new User();
         String testString = "test";
         Tweet tweet = new Tweet(testString, testUser);
         assertEquals(testString, tweet.getMessage());
-        
-        List<String> tags = new ArrayList<>();
-        tags.add("tag1");
-        tags.add("tag2");
-        tweet = new Tweet(testString, testUser, tags);
-        assertEquals(tags, tweet.getTags());
     }
 
     /**
@@ -75,7 +72,58 @@ public class TweetTest {
      */
     @Test
     public void testUnlike() {
+        User user1 = new User("test1", "");
+        User user2 = new User("test2", "");
+        Tweet tweet = new Tweet();
+        tweet.like(user1);
+        boolean unlike1 = tweet.unlike(user1);
+        boolean unlike2 = tweet.unlike(user2);
         
+        assertTrue(unlike1);
+        assertFalse(unlike2);
+        
+        boolean unlikeNull = tweet.like(null);
+        assertFalse(unlikeNull);
     }
     
+    /**
+     * Test of findTags method, of class Tweet.
+     */
+    @Test
+    public void testTags() {
+        User user = new User();
+        Tweet tweet = new Tweet("#test dit is een #bericht", user);
+        
+        ArrayList<String> expectedTags = new ArrayList<>();
+        expectedTags.add("test");
+        expectedTags.add("bericht");
+        
+        assertEquals(expectedTags, tweet.getTags());
+    }
+    
+    @Test
+    public void testEquals() {
+        User user1 = new User();
+        Tweet tweet1 = new Tweet("message1", user1);
+        Tweet tweet2 = new Tweet("message2", user1);
+
+        boolean equals = tweet1.equals(tweet2);
+        assertFalse(equals);
+        
+        equals = tweet1.equals(tweet1);
+        assertTrue(equals);    
+        
+        equals = tweet1.equals(null);
+        assertFalse(equals);
+    }
+    
+    @Test
+    public void testHashcode() {
+        User user = new User();
+        Tweet tweet1 = new Tweet("1", user);
+        Tweet tweet2 = new Tweet("2", user);
+        Tweet tweet3 = new Tweet("1", user);
+        assertFalse(tweet1.hashCode() == tweet2.hashCode());
+        assertTrue(tweet1.hashCode() == tweet3.hashCode());
+    }
 }

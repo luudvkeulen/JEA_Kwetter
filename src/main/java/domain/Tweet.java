@@ -12,8 +12,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -27,12 +27,12 @@ public class Tweet implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date published;
     private List<String> tags = new ArrayList<>();
-    @OneToOne
+    @ManyToOne
     private User tweetedBy;
     @OneToMany
-    private List<User> likes = new ArrayList<>();
+    private final List<User> likes = new ArrayList<>();
     @OneToMany
-    private List<User> mentions = new ArrayList<>();
+    private final List<User> mentions = new ArrayList<>();
 
     public Long getId() {
         return id;
