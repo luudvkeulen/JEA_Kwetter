@@ -89,30 +89,25 @@ public class Tweet implements Serializable {
         }
         return likes.remove(user);
     }
-    
+
+    /* Move to service
     private List<String> findMentions(String message) {
         List<String> foundMentions = findRegexMatches(message, "(?:\\s@)([A-Za-z0-9_]+)");
         //TODO Find user based on mention    
         return foundMentions;
-    }
-    
+    }*/
     private List<String> findTags(String message) {
         return findRegexMatches(message, "(?:\\s#)([A-Za-z0-9_]+)");
     }
-    
+
     private List<String> findRegexMatches(String message, String regex) {
         List<String> matches = new ArrayList<>();
         String prefixedString = " ".concat(message);
         Matcher m = Pattern.compile(regex).matcher(prefixedString);
-        while(m.find()) {
+        while (m.find()) {
             matches.add(m.group(1));
         }
         return matches;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -123,5 +118,38 @@ public class Tweet implements Serializable {
         hash = 47 * hash + Objects.hashCode(this.tags);
         hash = 47 * hash + Objects.hashCode(this.tweetedBy);
         return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Tweet other = (Tweet) obj;
+        if (!Objects.equals(this.message, other.message)) {
+            return false;
+        }
+        if (!Objects.equals(this.published, other.published)) {
+            return false;
+        }
+        if (!Objects.equals(this.tags, other.tags)) {
+            return false;
+        }
+        if (!Objects.equals(this.tweetedBy, other.tweetedBy)) {
+            return false;
+        }
+        if (!Objects.equals(this.likes, other.likes)) {
+            return false;
+        }
+        if (!Objects.equals(this.mentions, other.mentions)) {
+            return false;
+        }
+        return true;
     }
 }
