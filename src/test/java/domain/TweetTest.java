@@ -82,7 +82,7 @@ public class TweetTest {
         assertTrue(unlike1);
         assertFalse(unlike2);
         
-        boolean unlikeNull = tweet.like(null);
+        boolean unlikeNull = tweet.unlike(null);
         assertFalse(unlikeNull);
     }
     

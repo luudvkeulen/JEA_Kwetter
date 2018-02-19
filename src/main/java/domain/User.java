@@ -115,10 +115,8 @@ public class User implements Serializable {
             return false;
         }
 
-        if(!user.addFollower(this)) {
-            return false;
-        }
-        
+        user.addFollower(this);
+
         return following.add(user);
     }
 
@@ -126,21 +124,12 @@ public class User implements Serializable {
         user.removeFollower(this);
         return following.remove(user);
     }
-    
-    private boolean addFollower(User user) {
-        if(user == null || user == this) {
-            return false;
-        }
-        
+
+    private void addFollower(User user) {
         followers.add(user);
-        return true;
     }
-    
+
     private boolean removeFollower(User user) {
-        if(user == null) {
-            return false;
-        }
-        
         return followers.remove(user);
     }
 
@@ -172,14 +161,13 @@ public class User implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
         if (!(obj instanceof User)) {
             return false;
         }
         User otherUser = (User) obj;
-        if(this.email == null || otherUser.email == null) return false;
+        if (this.email == null || otherUser.email == null) {
+            return false;
+        }
         return this.email.equals(otherUser.email);
     }
 

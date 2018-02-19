@@ -29,6 +29,30 @@ public class UserTest {
     public void tearDown() {
     }
 
+    @Test
+    public void testConstructor() {
+        String picture = "picturetest";
+        String website = "website";
+        String firstname = "firstname";
+        String lastname = "lastname";
+        String bio = "bio";
+        String location = "location";
+        String email = "email";
+        String password = "password";
+        User user = new User(picture, website, firstname, lastname, bio, location, email, password);
+        assertEquals(user.getPicture(), picture);
+        assertEquals(user.getWebsite(), website);
+        assertEquals(user.getFirstName(), firstname);
+        assertEquals(user.getLastName(), lastname);
+        assertEquals(user.getBio(), bio);
+        assertEquals(user.getLocation(), location);
+        assertEquals(user.getEmail(), email);
+        assertEquals(user.getPassword(), password);
+        assertNotNull(user.getFollowers());
+        assertNotNull(user.getFollowing());
+        assertNotNull(user.getTweets());
+    }
+    
     /**
      * Test of follow method, of class User.
      */
@@ -54,7 +78,16 @@ public class UserTest {
      */
     @Test
     public void testUnfollow() {
-
+        User user1 = new User("user1", "");
+        User user2 = new User("user2", "");
+        user1.follow(user2);
+        boolean unfollowresult = user1.unfollow(user2);
+        assertTrue(unfollowresult);
+        
+        int following = user1.getFollowing().size();
+        int followers = user2.getFollowers().size();
+        assertEquals(0, following);
+        assertEquals(0, followers);
     }
 
     /**
@@ -105,6 +138,14 @@ public class UserTest {
         
         assertTrue(user1.equals(user2));
         assertFalse(user1.equals(user3));
+        
+        assertFalse(user1.equals(new Object()));
+        
+        User nullUser1 = new User();
+        User nullUser2 = new User();
+        assertFalse(nullUser1.equals(nullUser2));
+        assertFalse(user1.equals(nullUser2));
+        assertFalse(nullUser1.equals(user2));
     }
 
     /**
