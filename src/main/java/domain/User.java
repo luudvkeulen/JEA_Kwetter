@@ -141,6 +141,10 @@ public class User implements Serializable {
             case MODERATOR:
                 userRole = UserRole.ADMIN;
                 break;
+            case ADMIN:
+                break;
+            default:
+                break;
         }
 
         return userRole;
@@ -153,6 +157,10 @@ public class User implements Serializable {
                 break;
             case ADMIN:
                 userRole = UserRole.MODERATOR;
+                break;
+            case USER:
+                break;
+            default:
                 break;
         }
 
