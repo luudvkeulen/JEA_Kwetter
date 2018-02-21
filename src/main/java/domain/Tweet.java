@@ -90,12 +90,6 @@ public class Tweet implements Serializable {
         return likes.remove(user);
     }
 
-    /* Move to service
-    private List<String> findMentions(String message) {
-        List<String> foundMentions = findRegexMatches(message, "(?:\\s@)([A-Za-z0-9_]+)");
-        //TODO Find user based on mention    
-        return foundMentions;
-    }*/
     private List<String> findTags(String message) {
         return findRegexMatches(message, "(?:\\s#)([A-Za-z0-9_]+)");
     }
