@@ -194,10 +194,7 @@ public class User implements Serializable {
             return false;
         }
         final User other = (User) obj;
-        if (!Objects.equals(this.email, other.email)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.email, other.email);
     }
 
 }

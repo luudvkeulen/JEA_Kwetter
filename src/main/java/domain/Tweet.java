@@ -91,7 +91,7 @@ public class Tweet implements Serializable {
         }
         return likes.remove(user);
     }
-    
+
     public void addMention(User user) {
         this.mentions.add(user);
     }
@@ -147,9 +147,6 @@ public class Tweet implements Serializable {
         if (!Objects.equals(this.likes, other.likes)) {
             return false;
         }
-        if (!Objects.equals(this.mentions, other.mentions)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.mentions, other.mentions);
     }
 }
