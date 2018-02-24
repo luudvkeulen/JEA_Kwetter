@@ -1,7 +1,9 @@
 package domain;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -39,6 +41,7 @@ public class TweetTest {
         String testString = "test";
         Tweet tweet = new Tweet(testString, testUser);
         assertEquals(testString, tweet.getMessage());
+        assertEquals(testUser, tweet.getTweetedBy());
     }
 
     /**
@@ -55,6 +58,12 @@ public class TweetTest {
         assertTrue(result1);
         boolean result2 = tweet.like(user2);
         assertTrue(result2);
+        
+        Set<User> likes = tweet.getLikes();
+        Set<User> expectedLikes = new HashSet<>();
+        expectedLikes.add(user1);
+        expectedLikes.add(user2);
+        assertEquals(expectedLikes, likes);
        
         //Test duplicate like
         result1 = tweet.like(user1);
@@ -102,6 +111,16 @@ public class TweetTest {
     }
     
     @Test
+    public void testAddMention() {
+        User user = new User("email", "pw");
+        Tweet tweet = new Tweet();
+        tweet.addMention(user);
+        Set<User> expectedMentions = new HashSet<>();
+        expectedMentions.add(user);
+        assertEquals(expectedMentions, tweet.getMentions());
+    }
+    
+    @Test
     public void testEquals() {
         User user1 = new User();
         Tweet tweet1 = new Tweet("message1", user1);
@@ -115,6 +134,8 @@ public class TweetTest {
         
         equals = tweet1.equals(null);
         assertFalse(equals);
+        
+        
     }
     
     @Test

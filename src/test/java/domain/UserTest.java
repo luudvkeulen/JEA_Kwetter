@@ -141,11 +141,8 @@ public class UserTest {
         
         assertFalse(user1.equals(new Object()));
         
-        User nullUser1 = new User();
         User nullUser2 = new User();
-        assertFalse(nullUser1.equals(nullUser2));
         assertFalse(user1.equals(nullUser2));
-        assertFalse(nullUser1.equals(user2));
     }
 
     /**

@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.persistence.Entity;
@@ -30,9 +32,9 @@ public class Tweet implements Serializable {
     @ManyToOne
     private User tweetedBy;
     @OneToMany
-    private final List<User> likes = new ArrayList<>();
+    private final Set<User> likes = new HashSet<>();
     @OneToMany
-    private final List<User> mentions = new ArrayList<>();
+    private final Set<User> mentions = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -54,12 +56,12 @@ public class Tweet implements Serializable {
         return tweetedBy;
     }
 
-    public List<User> getLikes() {
-        return Collections.unmodifiableList(likes);
+    public Set<User> getLikes() {
+        return Collections.unmodifiableSet(likes);
     }
 
-    public List<User> getMentions() {
-        return Collections.unmodifiableList(mentions);
+    public Set<User> getMentions() {
+        return Collections.unmodifiableSet(mentions);
     }
 
     public Tweet() {
@@ -69,8 +71,8 @@ public class Tweet implements Serializable {
     public Tweet(String message, User user) {
         this.message = message;
         this.tweetedBy = user;
-        //this.mentions = findMentions(message);
         this.tags = findTags(message);
+        this.published = new Date();
     }
 
     public boolean like(User user) {
@@ -88,6 +90,10 @@ public class Tweet implements Serializable {
             return false;
         }
         return likes.remove(user);
+    }
+    
+    public void addMention(User user) {
+        this.mentions.add(user);
     }
 
     private List<String> findTags(String message) {
