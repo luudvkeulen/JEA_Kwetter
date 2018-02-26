@@ -10,10 +10,12 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -37,9 +39,10 @@ public class Tweet implements Serializable {
     private List<String> tags = new ArrayList<>();
     @ManyToOne
     private User tweetedBy;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.PERSIST)
     private final Set<User> likes = new HashSet<>();
-    @OneToMany
+    @OneToMany(cascade = CascadeType.PERSIST)
+    @JoinColumn(nullable = true)
     private final Set<User> mentions = new HashSet<>();
 
     public Long getId() {

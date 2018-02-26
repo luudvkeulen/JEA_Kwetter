@@ -18,6 +18,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import org.mindrot.jbcrypt.BCrypt;
 
 @Entity
 @NamedQueries({
@@ -111,7 +112,7 @@ public class User implements Serializable {
 
     public User(String email, String password) {
         this.email = email;
-        this.password = password;
+        this.password = BCrypt.hashpw(password, BCrypt.gensalt(12));
     }
 
     public User(String picture, String website, String firstName, String lastName, String bio, String location, String email, String password) {
@@ -125,8 +126,10 @@ public class User implements Serializable {
 
     }
     
-    public void tweet(String message) {
-        this.tweets.add(new Tweet(message, this));
+    public Tweet tweet(String message) {
+        Tweet tweet = new Tweet(message, this);
+        this.tweets.add(tweet);
+        return tweet;
     }
 
     public boolean follow(User user) {
