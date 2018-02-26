@@ -5,13 +5,18 @@ import java.util.List;
 
 public interface UserDAO {
 
-    User addUser(User user);
+    List<User> findAll();
 
-    List<User> getUsers();
+    User findById(int id);
+    
+    List<User> findByEmail(String email);
 
-    User getUserByEmail(String email);
+    List<User> findAllFollowers();
 
-    List<User> getFollowers();
+    List<User> findAllFollowing();
 
-    List<User> getFollowing();
+    boolean insert(User user);
+
+    boolean update(User user);
+
 }

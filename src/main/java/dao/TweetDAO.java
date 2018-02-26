@@ -1,13 +1,19 @@
 package dao;
 
 import domain.Tweet;
-import domain.User;
+import java.util.List;
 
 public interface TweetDAO {
 
-    Tweet getTweet(int id);
+    List<Tweet> findAll();
 
-    Tweet create(String content, User user);
+    Tweet findById(int id);
 
-    boolean remove(Tweet tweet);
+    List<Tweet> findByMessage(String query);
+
+    boolean insert(Tweet tweet);
+
+    boolean update(Tweet tweet);
+
+    boolean delete(Tweet tweet);
 }

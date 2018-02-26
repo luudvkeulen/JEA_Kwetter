@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import javax.persistence.CascadeType;
+import static javax.persistence.CascadeType.ALL;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -12,9 +14,22 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
 @Entity
+@NamedQueries({
+    @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")
+    ,
+    @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email LIKE :email")
+    //,
+    //TODO Fix the followers and following query
+    //@NamedQuery(name = "User.findAllFollowers", query = "")
+    //,
+    //@NamedQuery(name = "User.findAllFollowing", query = "")
+})
 public class User implements Serializable {
 
     @Id
@@ -31,11 +46,11 @@ public class User implements Serializable {
     private String password;
     @Enumerated(EnumType.ORDINAL)
     private UserRole userRole = UserRole.USER;
-    @OneToMany
+    @OneToMany(mappedBy = "tweetedBy", cascade = ALL)
     private final Set<Tweet> tweets = new HashSet<>();
-    @OneToMany
+    @ManyToMany
     private final Set<User> following = new HashSet<>();
-    @OneToMany
+    @ManyToMany(mappedBy = "following")
     private final Set<User> followers = new HashSet<>();
 
     public Long getId() {
@@ -108,6 +123,10 @@ public class User implements Serializable {
         this.bio = bio;
         this.location = location;
 
+    }
+    
+    public void tweet(String message) {
+        this.tweets.add(new Tweet(message, this));
     }
 
     public boolean follow(User user) {
