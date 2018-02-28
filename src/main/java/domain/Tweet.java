@@ -16,6 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -39,10 +40,11 @@ public class Tweet implements Serializable {
     private List<String> tags = new ArrayList<>();
     @ManyToOne
     private User tweetedBy;
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "tweet_likes")
     private final Set<User> likes = new HashSet<>();
-    @OneToMany(cascade = CascadeType.PERSIST)
-    @JoinColumn(nullable = true)
+    @OneToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "tweet_mentions")
     private final Set<User> mentions = new HashSet<>();
 
     public Long getId() {
@@ -86,9 +88,6 @@ public class Tweet implements Serializable {
 
     public boolean like(User user) {
         if (user == null) {
-            return false;
-        }
-        if (likes.contains(user)) {
             return false;
         }
         return likes.add(user);

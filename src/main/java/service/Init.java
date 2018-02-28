@@ -25,7 +25,9 @@ public class Init {
         Tweet user2tweet1 = user2.tweet("testMessage1");
         user1tweet1.like(user2);
         user1tweet2.like(user2);
+        user1tweet2.addMention(user2);
         user2tweet1.like(user1);
+        user2tweet1.addMention(user2);
         userDAO.insert(user1);
         userDAO.insert(user2);
         User user3 = new User("tes3@test.com", "Password");
