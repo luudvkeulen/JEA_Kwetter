@@ -20,7 +20,7 @@ public class TweetService {
         Matcher m = Pattern.compile("(?:\\s#)([A-Za-z0-9_]+)").matcher(prefixedString);
         while (m.find()) {
             List<User> users = userDAO.findByUsername(m.group(1));
-            if (users.size() > 0) {
+            if (!users.isEmpty()) {
                 mentions.add(users.get(0));
             }
         }
