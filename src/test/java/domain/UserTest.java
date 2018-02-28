@@ -39,7 +39,8 @@ public class UserTest {
         String location = "location";
         String email = "email";
         String password = "password";
-        User user = new User(picture, website, firstname, lastname, bio, location, email, password);
+        String username = "username";
+        User user = new User(username, picture, website, firstname, lastname, bio, location, email, password);
         assertEquals(user.getPicture(), picture);
         assertEquals(user.getWebsite(), website);
         assertEquals(user.getFirstName(), firstname);
@@ -47,26 +48,26 @@ public class UserTest {
         assertEquals(user.getBio(), bio);
         assertEquals(user.getLocation(), location);
         assertEquals(user.getEmail(), email);
-        assertEquals(user.getPassword(), password);
         assertNotNull(user.getFollowers());
         assertNotNull(user.getFollowing());
         assertNotNull(user.getTweets());
+        assertEquals(username, user.getUsername());
     }
-    
+
     /**
      * Test of follow method, of class User.
      */
     @Test
     public void testFollow() {
-        User user1 = new User("user1", "");
-        User user2 = new User("user2", "");
+        User user1 = new User("user1", "user1", "");
+        User user2 = new User("user2", "user2", "");
         boolean result1 = user1.follow(user2);
         assertTrue(result1);
         User followingUser = user1.getFollowing().iterator().next();
         assertEquals(user2, followingUser);
         User followedUser = user2.getFollowers().iterator().next();
         assertEquals(user1, followedUser);
-        
+
         boolean result2 = user1.follow(user1);
         assertFalse(result2);
         boolean result3 = user1.follow(null);
@@ -78,12 +79,12 @@ public class UserTest {
      */
     @Test
     public void testUnfollow() {
-        User user1 = new User("user1", "");
-        User user2 = new User("user2", "");
+        User user1 = new User("user1", "user1", "");
+        User user2 = new User("user2", "user2", "");
         user1.follow(user2);
         boolean unfollowresult = user1.unfollow(user2);
         assertTrue(unfollowresult);
-        
+
         int following = user1.getFollowing().size();
         int followers = user2.getFollowers().size();
         assertEquals(0, following);
@@ -116,7 +117,7 @@ public class UserTest {
         //Promote twice to admin
         user.promote();
         user.promote();
-        
+
         assertEquals(UserRole.ADMIN, user.getUserRole());
         user.demote();
         assertEquals(UserRole.MODERATOR, user.getUserRole());
@@ -132,15 +133,15 @@ public class UserTest {
      */
     @Test
     public void testEquals() {
-        User user1 = new User("user1", "");
-        User user2 = new User("user1", "");
-        User user3 = new User("user2", "");
-        
+        User user1 = new User("user1", "user1", "");
+        User user2 = new User("user1", "user1", "");
+        User user3 = new User("user2", "user2", "");
+
         assertTrue(user1.equals(user2));
         assertFalse(user1.equals(user3));
-        
+
         assertFalse(user1.equals(new Object()));
-        
+
         User nullUser2 = new User();
         assertFalse(user1.equals(nullUser2));
     }

@@ -7,7 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 @Stateless
-public class UserDAOImpl implements UserDAO{
+public class UserDAOImpl implements UserDAO {
 
     @PersistenceContext
     EntityManager em;
@@ -21,10 +21,15 @@ public class UserDAOImpl implements UserDAO{
     public User findById(int id) {
         return em.find(User.class, id);
     }
-    
+
     @Override
     public List<User> findByEmail(String email) {
         return em.createNamedQuery("User.findByEmail").setParameter("email", email).getResultList();
+    }
+
+    @Override
+    public List<User> findByUsername(String username) {
+        return em.createNamedQuery("User.findByUsername").setParameter("username", username).getResultList();
     }
 
     @Override

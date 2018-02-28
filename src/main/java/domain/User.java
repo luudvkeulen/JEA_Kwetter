@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import javax.persistence.CascadeType;
 import static javax.persistence.CascadeType.ALL;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,17 +24,16 @@ import org.mindrot.jbcrypt.BCrypt;
     @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")
     ,
     @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email LIKE :email")
-    //,
-    //TODO Fix the followers and following query
-    //@NamedQuery(name = "User.findAllFollowers", query = "")
-    //,
-    //@NamedQuery(name = "User.findAllFollowing", query = "")
+    ,
+    @NamedQuery(name = "User.findByUsername", query = "SELECT u FROM User u WHERE u.username LIKE :username")
 })
 public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+    @Column(unique = true)
+    private String username;
     private String picture;
     private String website;
     private String firstName;
@@ -106,17 +104,22 @@ public class User implements Serializable {
         return Collections.unmodifiableSet(followers);
     }
 
+    public String getUsername() {
+        return this.username;
+    }
+
     public User() {
 
     }
 
-    public User(String email, String password) {
+    public User(String email, String username, String password) {
         this.email = email;
+        this.username = username;
         this.password = BCrypt.hashpw(password, BCrypt.gensalt(12));
     }
 
-    public User(String picture, String website, String firstName, String lastName, String bio, String location, String email, String password) {
-        this(email, password);
+    public User(String username, String picture, String website, String firstName, String lastName, String bio, String location, String email, String password) {
+        this(email, username, password);
         this.picture = picture;
         this.website = website;
         this.firstName = firstName;
@@ -125,7 +128,7 @@ public class User implements Serializable {
         this.location = location;
 
     }
-    
+
     public Tweet tweet(String message) {
         Tweet tweet = new Tweet(message, this);
         this.tweets.add(tweet);
@@ -216,6 +219,9 @@ public class User implements Serializable {
             return false;
         }
         final User other = (User) obj;
+        if (!Objects.equals(this.username, other.username)) {
+            return false;
+        }
         return Objects.equals(this.email, other.email);
     }
 

@@ -105,13 +105,9 @@ public class Tweet implements Serializable {
     }
 
     private List<String> findTags(String message) {
-        return findRegexMatches(message, "(?:\\s#)([A-Za-z0-9_]+)");
-    }
-
-    private List<String> findRegexMatches(String message, String regex) {
         List<String> matches = new ArrayList<>();
         String prefixedString = " ".concat(message);
-        Matcher m = Pattern.compile(regex).matcher(prefixedString);
+        Matcher m = Pattern.compile("(?:\\s#)([A-Za-z0-9_]+)").matcher(prefixedString);
         while (m.find()) {
             matches.add(m.group(1));
         }

@@ -8,8 +8,10 @@ public interface UserDAO {
     List<User> findAll();
 
     User findById(int id);
-    
+
     List<User> findByEmail(String email);
+
+    List<User> findByUsername(String username);
 
     List<User> findAllFollowers();
 
