@@ -39,7 +39,7 @@ public class Tweet implements Serializable {
     private Long id;
     private String message;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "published", nullable = false, columnDefinition = "TIMESTAMP default CURRENT_TIMESTAMP")
+    //@Column(name = "published", nullable = false, columnDefinition = "TIMESTAMP default CURRENT_TIMESTAMP")
     private Date published;
     private List<String> tags = new ArrayList<>();
     @ManyToOne
@@ -82,6 +82,26 @@ public class Tweet implements Serializable {
         return Collections.unmodifiableSet(mentions);
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public void setPublished(Date published) {
+        this.published = published;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
+    public void setTweetedBy(User tweetedBy) {
+        this.tweetedBy = tweetedBy;
+    }
+
     public Tweet() {
 
     }
@@ -90,7 +110,7 @@ public class Tweet implements Serializable {
         this.message = message;
         this.tweetedBy = user;
         this.tags = findTags(message);
-        //this.published = new Date();
+        this.published = new Date();
     }
 
     public boolean like(User user) {
