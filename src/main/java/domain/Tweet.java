@@ -11,7 +11,9 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.enterprise.inject.Model;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -37,6 +39,7 @@ public class Tweet implements Serializable {
     private Long id;
     private String message;
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "published", nullable = false, columnDefinition = "TIMESTAMP default CURRENT_TIMESTAMP")
     private Date published;
     private List<String> tags = new ArrayList<>();
     @ManyToOne
@@ -64,14 +67,17 @@ public class Tweet implements Serializable {
         return Collections.unmodifiableList(tags);
     }
 
+    @JsonbTransient
     public User getTweetedBy() {
         return tweetedBy;
     }
 
+    @JsonbTransient
     public Set<User> getLikes() {
         return Collections.unmodifiableSet(likes);
     }
 
+    @JsonbTransient
     public Set<User> getMentions() {
         return Collections.unmodifiableSet(mentions);
     }
