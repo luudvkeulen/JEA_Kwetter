@@ -19,4 +19,8 @@ public class UserService {
     public List<User> findByUsername(String username) {
         return userDAO.findByUsername(username);
     }
+    
+    public void register(User u) {
+        userDAO.insert(u);
+    }
 }

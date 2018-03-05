@@ -1,6 +1,5 @@
 package domain;
 
-import java.util.HashSet;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -40,7 +39,7 @@ public class UserTest {
         String email = "email";
         String password = "password";
         String username = "username";
-        User user = new User(username, picture, website, firstname, lastname, bio, location, email, password);
+        User user = new User(email, username, password, picture, website, firstname, lastname, bio, location);
         assertEquals(user.getPicture(), picture);
         assertEquals(user.getWebsite(), website);
         assertEquals(user.getFirstName(), firstname);
