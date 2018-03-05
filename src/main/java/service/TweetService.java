@@ -1,17 +1,24 @@
 package service;
 
+import dao.TweetDAO;
 import dao.UserDAO;
+import domain.Tweet;
 import domain.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+@Stateless
 public class TweetService {
 
     @Inject
     private UserDAO userDAO;
+    
+    @Inject
+    private TweetDAO tweetDAO;
 
     private List<User> findMentions(String message) {
         List<User> mentions = new ArrayList<>();
@@ -26,5 +33,13 @@ public class TweetService {
         }
 
         return mentions;
+    }
+    
+    public List<Tweet> allTweets() {
+        return tweetDAO.findAll();
+    }
+    
+    public Tweet getTweet(long id) {
+        return tweetDAO.findById(id);
     }
 }

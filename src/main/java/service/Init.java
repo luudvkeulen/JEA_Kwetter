@@ -17,7 +17,7 @@ public class Init {
 
     @PostConstruct
     public void init() {
-        User user1 = new User("test1@test.com", "test1", "12345");
+        User user1 = new User("test1@test.com", "test1", "12345", "", "test1.nl", "TestN", "TestLN", "Bio", "Eindhoven");
         Tweet user1tweet1 = user1.tweet("testMessage");
         Tweet user1tweet2 = user1.tweet("testMessage2");
         User user2 = new User("test2@test.com", "test2", "12345");

@@ -18,7 +18,7 @@ public class TweetDAOImpl implements TweetDAO {
     }
 
     @Override
-    public Tweet findById(int id) {
+    public Tweet findById(long id) {
         return em.find(Tweet.class, id);
     }
 

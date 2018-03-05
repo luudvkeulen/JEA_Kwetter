@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import javax.enterprise.inject.Model;
+import javax.json.bind.annotation.JsonbTransient;
 import static javax.persistence.CascadeType.ALL;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,6 +22,7 @@ import javax.persistence.OneToMany;
 import org.mindrot.jbcrypt.BCrypt;
 
 @Entity
+@Model
 @NamedQueries({
     @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")
     ,
@@ -92,14 +95,17 @@ public class User implements Serializable {
         return userRole;
     }
 
+    @JsonbTransient
     public Set<Tweet> getTweets() {
         return Collections.unmodifiableSet(tweets);
     }
 
+    @JsonbTransient
     public Set<User> getFollowing() {
         return Collections.unmodifiableSet(following);
     }
 
+    @JsonbTransient
     public Set<User> getFollowers() {
         return Collections.unmodifiableSet(followers);
     }
@@ -118,7 +124,7 @@ public class User implements Serializable {
         this.password = BCrypt.hashpw(password, BCrypt.gensalt(12));
     }
 
-    public User(String username, String picture, String website, String firstName, String lastName, String bio, String location, String email, String password) {
+    public User(String email, String username, String password, String picture, String website, String firstName, String lastName, String bio, String location) {
         this(email, username, password);
         this.picture = picture;
         this.website = website;

@@ -10,6 +10,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.enterprise.inject.Model;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,6 +25,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
+@Model
 @NamedQueries({
     @NamedQuery(name = "Tweet.findAll", query = "SELECT t FROM Tweet t"),
     @NamedQuery(name = "Tweet.findByMessage", query = "SELECT t FROM Tweet t WHERE t.message LIKE '%:message%'")
@@ -82,7 +84,7 @@ public class Tweet implements Serializable {
         this.message = message;
         this.tweetedBy = user;
         this.tags = findTags(message);
-        this.published = new Date();
+        //this.published = new Date();
     }
 
     public boolean like(User user) {

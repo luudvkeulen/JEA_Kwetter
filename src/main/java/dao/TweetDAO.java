@@ -7,7 +7,7 @@ public interface TweetDAO {
 
     List<Tweet> findAll();
 
-    Tweet findById(int id);
+    Tweet findById(long id);
 
     List<Tweet> findByMessage(String query);
 
