@@ -30,7 +30,7 @@ import javax.persistence.TemporalType;
 @Model
 @NamedQueries({
     @NamedQuery(name = "Tweet.findAll", query = "SELECT t FROM Tweet t"),
-    @NamedQuery(name = "Tweet.findByMessage", query = "SELECT t FROM Tweet t WHERE t.message LIKE '%:message%'")
+    @NamedQuery(name = "Tweet.findByMessage", query = "SELECT t FROM Tweet t WHERE t.message LIKE :message")
 })
 public class Tweet implements Serializable {
 

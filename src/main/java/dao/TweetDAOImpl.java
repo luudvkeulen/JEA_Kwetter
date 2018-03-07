@@ -23,8 +23,8 @@ public class TweetDAOImpl implements TweetDAO {
     }
 
     @Override
-    public List<Tweet> findByMessage(String query) {
-        return em.createNamedQuery("Tweet.findByMessage").setParameter("message", query).getResultList();
+    public List<Tweet> findByMessage(String message) {
+        return em.createNamedQuery("Tweet.findByMessage").setParameter("message", "%" + message + "%").getResultList();
     }
 
     @Override

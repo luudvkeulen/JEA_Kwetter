@@ -1,4 +1,3 @@
-
 package rest;
 
 import domain.Tweet;
@@ -20,25 +19,39 @@ public class TweetResource {
 
     @Inject
     private TweetService tweetService;
-    
+
     @GET
-    @Path("alltweets")
+    @Path("all")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Tweet> allTweets() {
+    public List<Tweet> all() {
         return tweetService.allTweets();
     }
-    
+
     @GET
-    @Path("gettweet/{id}")
+    @Path("get/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Tweet getTweet(@PathParam("id") long id) {
+    public Tweet get(@PathParam("id") long id) {
         return tweetService.getTweet(id);
     }
-    
+
+    @GET
+    @Path("getLatest/{userid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Tweet> getLatest(@PathParam("userid") long userid) {
+        return null;
+    }
+
+    @GET
+    @Path("findbymessage/{query}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Tweet> findByMessage(@PathParam("query") String query) {
+        return tweetService.findByMessage(query);
+    }
+
     @POST
-    @Path("tweet")
+    @Path("tweet/{userid}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void tweet(Tweet tweet) {
-        
+    public void tweet(@PathParam("userid") long id, Tweet tweet) {
+        tweetService.tweet(tweet);
     }
 }

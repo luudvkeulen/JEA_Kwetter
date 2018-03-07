@@ -113,7 +113,7 @@ public class User implements Serializable {
     public String getUsername() {
         return this.username;
     }
-    
+
     public void setEmail(String email) {
         this.email = email;
     }

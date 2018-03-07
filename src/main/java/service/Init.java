@@ -22,7 +22,7 @@ public class Init {
         Tweet user1tweet2 = user1.tweet("testMessage2");
         User user2 = new User("test2@test.com", "test2", "12345");
         user2.follow(user1);
-        Tweet user2tweet1 = user2.tweet("testMessage1 #nice");
+        Tweet user2tweet1 = user2.tweet("testMessage1 #nice @test1");
         user1tweet1.like(user2);
         user1tweet2.like(user2);
         user1tweet2.addMention(user2);

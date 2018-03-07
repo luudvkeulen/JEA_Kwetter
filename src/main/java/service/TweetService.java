@@ -50,4 +50,8 @@ public class TweetService {
         
         tweetDAO.insert(tweet);
     }
+    
+    public List<Tweet> findByMessage(String query) {
+        return tweetDAO.findByMessage(query);
+    }
 }

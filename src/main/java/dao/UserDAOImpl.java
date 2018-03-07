@@ -1,7 +1,11 @@
 package dao;
 
 import domain.User;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -9,6 +13,8 @@ import javax.persistence.PersistenceContext;
 @Stateless
 public class UserDAOImpl implements UserDAO {
 
+    private static final Logger LOGGER = Logger.getLogger( UserDAOImpl.class.getName() );
+    
     @PersistenceContext
     EntityManager em;
 
@@ -18,7 +24,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public User findById(int id) {
+    public User findById(long id) {
         return em.find(User.class, id);
     }
 
@@ -33,18 +39,32 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public List<User> findAllFollowers() {
-        return em.createNamedQuery("User.findAllFollowers").getResultList();
+    public Set<User> findAllFollowers(long id) {
+        User u = em.find(User.class, id);
+        if (u == null) {
+            return new HashSet<>();
+        }
+        return u.getFollowers();
     }
 
     @Override
-    public List<User> findAllFollowing() {
-        return em.createNamedQuery("User.findAllFollowing").getResultList();
+    public Set<User> findAllFollowing(long id) {
+        User u = em.find(User.class, id);
+        if (u == null) {
+            return new HashSet<>();
+        }
+        return u.getFollowing();
     }
 
     @Override
     public boolean insert(User user) {
-        em.persist(user);
+        try {
+            em.persist(user);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, e.getMessage());
+            return false;
+        }
+
         return true;
     }
 
@@ -53,5 +73,4 @@ public class UserDAOImpl implements UserDAO {
         em.merge(user);
         return true;
     }
-
 }

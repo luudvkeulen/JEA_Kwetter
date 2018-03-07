@@ -50,11 +50,11 @@
             <artifactId>jbcrypt</artifactId>
             <version>0.4</version>
         </dependency>
-        <!--<dependency>
-            <groupId>org.apache.johnzon</groupId>
-            <artifactId>jsonb-api</artifactId>
-            <version>1.0.0</version>
-        </dependency>-->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>2.15.0</version>
+        </dependency>
     </dependencies>
 
     <build>
