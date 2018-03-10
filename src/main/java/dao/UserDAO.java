@@ -2,16 +2,24 @@ package dao;
 
 import domain.User;
 import java.util.List;
+import java.util.Set;
 
 public interface UserDAO {
 
-    User addUser(User user);
+    List<User> findAll();
 
-    List<User> getUsers();
+    User findById(long id);
 
-    User getUserByEmail(String email);
+    List<User> findByEmail(String email);
 
-    List<User> getFollowers();
+    List<User> findByUsername(String username);
 
-    List<User> getFollowing();
+    Set<User> findAllFollowers(long id);
+
+    Set<User> findAllFollowing(long id);
+
+    boolean insert(User user);
+
+    boolean update(User user);
+
 }

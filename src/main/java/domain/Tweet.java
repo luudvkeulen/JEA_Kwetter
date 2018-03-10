@@ -10,16 +10,28 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.enterprise.inject.Model;
+import javax.json.bind.annotation.JsonbTransient;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
+@Model
+@NamedQueries({
+    @NamedQuery(name = "Tweet.findAll", query = "SELECT t FROM Tweet t"),
+    @NamedQuery(name = "Tweet.findByMessage", query = "SELECT t FROM Tweet t WHERE t.message LIKE :message")
+})
 public class Tweet implements Serializable {
 
     @Id
@@ -27,13 +39,16 @@ public class Tweet implements Serializable {
     private Long id;
     private String message;
     @Temporal(TemporalType.TIMESTAMP)
+    //@Column(name = "published", nullable = false, columnDefinition = "TIMESTAMP default CURRENT_TIMESTAMP")
     private Date published;
     private List<String> tags = new ArrayList<>();
     @ManyToOne
     private User tweetedBy;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "tweet_likes")
     private final Set<User> likes = new HashSet<>();
-    @OneToMany
+    @OneToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "tweet_mentions")
     private final Set<User> mentions = new HashSet<>();
 
     public Long getId() {
@@ -52,16 +67,39 @@ public class Tweet implements Serializable {
         return Collections.unmodifiableList(tags);
     }
 
+    @JsonbTransient
     public User getTweetedBy() {
         return tweetedBy;
     }
 
+    @JsonbTransient
     public Set<User> getLikes() {
         return Collections.unmodifiableSet(likes);
     }
 
+    @JsonbTransient
     public Set<User> getMentions() {
         return Collections.unmodifiableSet(mentions);
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public void setPublished(Date published) {
+        this.published = published;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
+    public void setTweetedBy(User tweetedBy) {
+        this.tweetedBy = tweetedBy;
     }
 
     public Tweet() {
@@ -79,9 +117,6 @@ public class Tweet implements Serializable {
         if (user == null) {
             return false;
         }
-        if (likes.contains(user)) {
-            return false;
-        }
         return likes.add(user);
     }
 
@@ -97,13 +132,9 @@ public class Tweet implements Serializable {
     }
 
     private List<String> findTags(String message) {
-        return findRegexMatches(message, "(?:\\s#)([A-Za-z0-9_]+)");
-    }
-
-    private List<String> findRegexMatches(String message, String regex) {
         List<String> matches = new ArrayList<>();
         String prefixedString = " ".concat(message);
-        Matcher m = Pattern.compile(regex).matcher(prefixedString);
+        Matcher m = Pattern.compile("(?:\\s#)([A-Za-z0-9_]+)").matcher(prefixedString);
         while (m.find()) {
             matches.add(m.group(1));
         }

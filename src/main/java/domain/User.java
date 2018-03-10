@@ -5,6 +5,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import javax.enterprise.inject.Model;
+import javax.json.bind.annotation.JsonbTransient;
+import static javax.persistence.CascadeType.ALL;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -12,14 +15,28 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import org.mindrot.jbcrypt.BCrypt;
 
 @Entity
+@Model
+@NamedQueries({
+    @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")
+    ,
+    @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email LIKE :email")
+    ,
+    @NamedQuery(name = "User.findByUsername", query = "SELECT u FROM User u WHERE u.username LIKE :username")
+})
 public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+    @Column(unique = true)
+    private String username;
     private String picture;
     private String website;
     private String firstName;
@@ -31,11 +48,11 @@ public class User implements Serializable {
     private String password;
     @Enumerated(EnumType.ORDINAL)
     private UserRole userRole = UserRole.USER;
-    @OneToMany
+    @OneToMany(mappedBy = "tweetedBy", cascade = ALL)
     private final Set<Tweet> tweets = new HashSet<>();
-    @OneToMany
+    @ManyToMany
     private final Set<User> following = new HashSet<>();
-    @OneToMany
+    @ManyToMany(mappedBy = "following")
     private final Set<User> followers = new HashSet<>();
 
     public Long getId() {
@@ -78,29 +95,81 @@ public class User implements Serializable {
         return userRole;
     }
 
+    @JsonbTransient
     public Set<Tweet> getTweets() {
         return Collections.unmodifiableSet(tweets);
     }
 
+    @JsonbTransient
     public Set<User> getFollowing() {
         return Collections.unmodifiableSet(following);
     }
 
+    @JsonbTransient
     public Set<User> getFollowers() {
         return Collections.unmodifiableSet(followers);
+    }
+
+    public String getUsername() {
+        return this.username;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public void setPassword(String password) {
+        this.password = BCrypt.hashpw(password, BCrypt.gensalt(12));
+    }
+
+    public void setUserRole(UserRole userRole) {
+        this.userRole = userRole;
     }
 
     public User() {
 
     }
 
-    public User(String email, String password) {
+    public User(String email, String username, String password) {
         this.email = email;
-        this.password = password;
+        this.username = username;
+        this.password = BCrypt.hashpw(password, BCrypt.gensalt(12));
     }
 
-    public User(String picture, String website, String firstName, String lastName, String bio, String location, String email, String password) {
-        this(email, password);
+    public User(String email, String username, String password, String picture, String website, String firstName, String lastName, String bio, String location) {
+        this(email, username, password);
         this.picture = picture;
         this.website = website;
         this.firstName = firstName;
@@ -108,6 +177,12 @@ public class User implements Serializable {
         this.bio = bio;
         this.location = location;
 
+    }
+
+    public Tweet tweet(String message) {
+        Tweet tweet = new Tweet(message, this);
+        this.tweets.add(tweet);
+        return tweet;
     }
 
     public boolean follow(User user) {
@@ -194,6 +269,9 @@ public class User implements Serializable {
             return false;
         }
         final User other = (User) obj;
+        if (!Objects.equals(this.username, other.username)) {
+            return false;
+        }
         return Objects.equals(this.email, other.email);
     }
 
