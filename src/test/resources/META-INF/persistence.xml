@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="">
+  <persistence-unit name="Kwetter2PU" transaction-type="JTA">
+    <properties>
+        <property name="javax.persistence.jdbc.url" value="jdbc:mysql//localhost/kwetter"/>
+        <property name="javax.persistence.jdbc.user" value="kwetter" />
+        <property name="javax.persistence.jdbc.password" value="12345678" />
+        <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />ø
+        
+      <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
+      <property name="eclipselink.logging.level.sql" value="FINE"/>
+    </properties>
+  </persistence-unit>
+</persistence>

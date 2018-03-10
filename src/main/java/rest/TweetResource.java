@@ -20,6 +20,7 @@ public class TweetResource {
     @Inject
     private TweetService tweetService;
 
+    /* GET */
     @GET
     @Path("all")
     @Produces(MediaType.APPLICATION_JSON)
@@ -48,6 +49,7 @@ public class TweetResource {
         return tweetService.findByMessage(query);
     }
 
+    /* POST */
     @POST
     @Path("tweet/{userid}")
     @Consumes(MediaType.APPLICATION_JSON)
