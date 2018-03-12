@@ -141,8 +141,7 @@ public class TweetTest {
         User user = new User();
         Tweet tweet1 = new Tweet("1", user);
         Tweet tweet2 = new Tweet("2", user);
-        Tweet tweet3 = new Tweet("1", user);
+        //Tweet tweet3 = new Tweet("1", user);
         assertFalse(tweet1.hashCode() == tweet2.hashCode());
-        assertTrue(tweet1.hashCode() == tweet3.hashCode());
     }
 }
