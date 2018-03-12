@@ -56,4 +56,18 @@ public class TweetResource {
     public void tweet(@PathParam("userid") long id, Tweet tweet) {
         tweetService.tweet(tweet);
     }
+    
+    @POST
+    @Path("like/{tweetid}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void like(@PathParam("tweetid") long tweetid, long userid) {
+        tweetService.like(tweetid, userid);
+    }
+    
+    @POST
+    @Path("unlike/{tweetid}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void unlike(@PathParam("tweetid") long tweetid, long userid) {
+        tweetService.unlike(tweetid, userid);
+    }
 }

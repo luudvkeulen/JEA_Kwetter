@@ -68,4 +68,18 @@ public class UserResource {
     public void register(User u) {
         userService.register(u);
     }
+
+    @POST
+    @Path("follow/{userid}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void follow(@PathParam("userid") long id, long otheruser) {
+        userService.follow(id, otheruser);
+    }
+    
+    @POST
+    @Path("unfollow/{userid}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void unfollow(@PathParam("userid") long id, long otheruser) {
+        userService.unfollow(id, otheruser);
+    }
 }

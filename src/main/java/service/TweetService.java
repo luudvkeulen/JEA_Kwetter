@@ -54,4 +54,20 @@ public class TweetService {
     public List<Tweet> findByMessage(String query) {
         return tweetDAO.findByMessage(query);
     }
+    
+    public void like(long tweetid, long userid) {
+        Tweet tweet = tweetDAO.findById(tweetid);
+        User user = userDAO.findById(userid);
+        if(tweet != null && user != null) {
+            tweet.like(user);
+        }
+    }
+    
+    public void unlike(long tweetid, long userid) {
+        Tweet tweet = tweetDAO.findById(tweetid);
+        User user = userDAO.findById(userid);
+        if(tweet != null && user != null) {
+            tweet.unlike(user);
+        }
+    }
 }

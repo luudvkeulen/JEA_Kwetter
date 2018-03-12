@@ -45,4 +45,20 @@ public class UserService {
         User user = userDAO.findById(id);
         user.demote();
     }
+
+    public void follow(long userid, long otheruserid) {
+        User user = userDAO.findById(userid);
+        User otherUser = userDAO.findById(otheruserid);
+        if (user != null && otherUser != null) {
+            user.follow(otherUser);
+        }
+    }
+
+    public void unfollow(long userid, long otheruserid) {
+        User user = userDAO.findById(userid);
+        User otherUser = userDAO.findById(otheruserid);
+        if (user != null && otherUser != null) {
+            user.unfollow(otherUser);
+        }
+    }
 }
