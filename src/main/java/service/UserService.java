@@ -43,7 +43,9 @@ public class UserService {
 
     public void demote(long id) {
         User user = userDAO.findById(id);
-        user.demote();
+        if (user != null) {
+            user.demote();
+        }
     }
 
     public void follow(long userid, long otheruserid) {
