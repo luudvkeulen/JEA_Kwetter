@@ -39,14 +39,14 @@ public class UserResource {
     @Path("followers/{userid}")
     @Produces(MediaType.APPLICATION_JSON)
     public Set<User> followers(@PathParam("userid") long id) {
-        return null;
+        return userService.findFollowers(id);
     }
 
     @GET
     @Path("following/{userid}")
     @Produces(MediaType.APPLICATION_JSON)
     public Set<User> following(@PathParam("userid") long id) {
-        return null;
+        return userService.findFollowing(id);
     }
 
     /* POST */

@@ -16,7 +16,7 @@ public class TweetService {
 
     @Inject
     private UserDAO userDAO;
-    
+
     @Inject
     private TweetDAO tweetDAO;
 
@@ -34,39 +34,39 @@ public class TweetService {
 
         return mentions;
     }
-    
+
     public List<Tweet> allTweets() {
         return tweetDAO.findAll();
     }
-    
+
     public Tweet getTweet(long id) {
         return tweetDAO.findById(id);
     }
-    
+
     public void tweet(Tweet tweet) {
-        findMentions(tweet.getMessage()).forEach(u -> {
-            tweet.addMention(u);
-        });
-        
+        findMentions(tweet.getMessage()).forEach(u
+                -> tweet.addMention(u)
+        );
+
         tweetDAO.insert(tweet);
     }
-    
+
     public List<Tweet> findByMessage(String query) {
         return tweetDAO.findByMessage(query);
     }
-    
+
     public void like(long tweetid, long userid) {
         Tweet tweet = tweetDAO.findById(tweetid);
         User user = userDAO.findById(userid);
-        if(tweet != null && user != null) {
+        if (tweet != null && user != null) {
             tweet.like(user);
         }
     }
-    
+
     public void unlike(long tweetid, long userid) {
         Tweet tweet = tweetDAO.findById(tweetid);
         User user = userDAO.findById(userid);
-        if(tweet != null && user != null) {
+        if (tweet != null && user != null) {
             tweet.unlike(user);
         }
     }
