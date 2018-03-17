@@ -2,6 +2,7 @@ package service;
 
 import dao.UserDAO;
 import domain.User;
+import domain.UserRole;
 import java.util.List;
 import java.util.Set;
 import javax.ejb.Stateless;
@@ -71,6 +72,7 @@ public class UserService {
             return false;
         }
         User user = foundUsers.get(0);
+        if(user.getUserRole() == UserRole.USER) return false;
         return BCrypt.checkpw(password, user.getPassword());
     }
 }
