@@ -9,17 +9,16 @@
     </h:head>
     <h:body>
         <h3>Login here</h3>
-        <h:form id="login-form">
+        <h:form>
             <h:outputText value="username:"/>
-            <h:inputText value="#{loginController.username}" id="username"/>
+            <p:inputText value="#{loginController.username}" id="username"/>
             <br/>
             <h:outputText value="password:"/>
-            <h:inputSecret value="#{loginController.password}" id="password"/>
+            <p:password value="#{loginController.password}" id="password"/>
             <br/>
-            <h:commandButton id="button" value="Login" action="#{loginController.login}"/>
-            <br/>
-            <h:messages />
-            <br/>
+            <p:commandButton id="button" value="Login" action="#{loginController.login}" update="messages"/>
+
+            <p:messages id="messages" closable="true"/>
         </h:form>
     </h:body>
 </html>

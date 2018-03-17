@@ -34,7 +34,7 @@ public class LoginController implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
-    
+
     public boolean isLoggedIn() {
         return loggedIn;
     }
@@ -47,18 +47,16 @@ public class LoginController implements Serializable {
         boolean valid = userService.verifyPassword(username, password);
         if (valid) {
             loggedIn = true;
-            return "/index.html";
+            return "/index.html?faces-redirect=true";
         }
 
-        FacesMessage msg = new FacesMessage("Login error!", "ERROR MSG");
-        msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-        FacesContext.getCurrentInstance().addMessage(null, msg);
-        
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Wrong credentials", "Wrong credentials"));
+
         return "/login.xhtml";
     }
-    
+
     public String logout() {
         loggedIn = false;
-        return "/login.xhtml";
+        return "/login.xhtml?faces-redirect=true";
     }
 }

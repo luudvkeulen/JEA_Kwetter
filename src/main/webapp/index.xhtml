@@ -8,6 +8,7 @@
     </h:head>
     <h:body>
         <h:form id="form">
+            <p:commandButton  ajax="false" value="logout" action="#{loginController.logout}"/>
             <h1>Tweets</h1>
 
             <p:dataTable id="tweets" var="vtweet" value="#{tweetController.tweets}" selectionMode="single" selection="#{tweetController.selectedTweet}" rowKey="#{vtweet.id}">
