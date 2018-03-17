@@ -70,4 +70,9 @@ public class TweetService {
             tweet.unlike(user);
         }
     }
+
+    public void remove(long tweetid) {
+        Tweet tweet = tweetDAO.findById(tweetid);
+        tweetDAO.delete(tweet);
+    }
 }
