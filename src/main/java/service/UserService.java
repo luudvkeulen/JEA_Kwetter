@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import org.mindrot.jbcrypt.BCrypt;
 
 @Stateless
 public class UserService {
@@ -62,5 +63,14 @@ public class UserService {
         if (user != null && otherUser != null) {
             user.unfollow(otherUser);
         }
+    }
+
+    public boolean verifyPassword(String username, String password) {
+        List<User> foundUsers = userDAO.findByUsername(username);
+        if (foundUsers.isEmpty()) {
+            return false;
+        }
+        User user = foundUsers.get(0);
+        return BCrypt.checkpw(password, user.getPassword());
     }
 }
