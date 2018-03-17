@@ -7,19 +7,33 @@
         <title>Kwetter Admin Panel</title>
     </h:head>
     <h:body>
-        <p:dataTable var="vtweet" value="#{tweetController.tweets}">
-            <p:column headerText="User">
-                <h:outputText value="#{vtweet.tweetedBy.username}" />
-            </p:column>
+        <h:form id="form">
+            <h1>Tweets</h1>
 
-            <p:column headerText="Message">
-                <h:outputText value="#{vtweet.message}" />
-            </p:column> 
+            <p:dataTable id="tweets" var="vtweet" value="#{tweetController.tweets}" selectionMode="single" selection="#{tweetController.selectedTweet}" rowKey="#{vtweet.id}">
+                <p:column headerText="User">
+                    <h:outputText value="#{vtweet.tweetedBy.username}" />
+                </p:column>
 
-            <p:column>
-                <p:commandButton value="Remove" type="button"/>
-            </p:column>
-        </p:dataTable>
+                <p:column headerText="Message">
+                    <h:outputText value="#{vtweet.message}" />
+                </p:column> 
+            </p:dataTable>
+
+            <p:commandButton value="Remove" update="tweets" actionListener="#{tweetController.delete}"/>
+            <h1>Users</h1>
+            <p:dataTable id="users" var="vuser" value="#{userController.users}" selectionMode="single" selection="#{userController.selectedUser}" rowKey="#{vuser.id}">
+                <p:column headerText="Username">
+                    <h:outputText value="#{vuser.username}" />
+                </p:column>
+
+                <p:column headerText="Rank">
+                    <h:outputText value="#{vuser.userRole}" />
+                </p:column> 
+            </p:dataTable>
+            <p:commandButton value="Promote" update="users" actionListener="#{userController.promote}"/>
+            <p:commandButton value="Demote" update="users" actionListener="#{userController.demote}"/>
+        </h:form>
     </h:body>
 </html>
 

@@ -4,13 +4,13 @@ import domain.Tweet;
 import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import service.TweetService;
 
 @Named
-@RequestScoped
+@ViewScoped
 public class TweetController implements Serializable {
 
     @Inject
@@ -18,6 +18,8 @@ public class TweetController implements Serializable {
 
     private List<Tweet> tweets;
 
+    private Tweet selectedTweet;
+    
     public TweetController() {
 
     }
@@ -31,4 +33,18 @@ public class TweetController implements Serializable {
         return tweets;
     }
 
+    public void delete() {
+        tweetService.remove(selectedTweet.getId());
+        this.tweets = tweetService.allTweets();
+    }
+
+    public Tweet getSelectedTweet() {
+        return selectedTweet;
+    }
+
+    public void setSelectedTweet(Tweet selectedTweet) {
+        this.selectedTweet = selectedTweet;
+    }
+    
+    
 }
