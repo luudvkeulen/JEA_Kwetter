@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Kwetter Admin Panel</title>
+    </h:head>
+    <h:body>
+        <h:form id="form">
+            <p:commandButton  ajax="false" value="logout" action="#{loginController.logout}"/>
+            <h1>Tweets</h1>
+
+            <p:dataTable id="tweets" var="vtweet" value="#{tweetController.tweets}" selectionMode="single" selection="#{tweetController.selectedTweet}" rowKey="#{vtweet.id}">
+                <p:column headerText="User">
+                    <h:outputText value="#{vtweet.tweetedBy.username}" />
+                </p:column>
+
+                <p:column headerText="Message">
+                    <h:outputText value="#{vtweet.message}" />
+                </p:column> 
+            </p:dataTable>
+
+            <p:commandButton value="Remove" update="tweets" actionListener="#{tweetController.delete}"/>
+            <h1>Users</h1>
+            <p:dataTable id="users" var="vuser" value="#{userController.users}" selectionMode="single" selection="#{userController.selectedUser}" rowKey="#{vuser.id}">
+                <p:column headerText="Username">
+                    <h:outputText value="#{vuser.username}" />
+                </p:column>
+
+                <p:column headerText="Rank">
+                    <h:outputText value="#{vuser.userRole}" />
+                </p:column> 
+            </p:dataTable>
+            <p:commandButton value="Promote" update="users" actionListener="#{userController.promote}"/>
+            <p:commandButton value="Demote" update="users" actionListener="#{userController.demote}"/>
+        </h:form>
+    </h:body>
+</html>
+

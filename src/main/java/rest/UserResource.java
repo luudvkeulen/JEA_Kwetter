@@ -39,14 +39,14 @@ public class UserResource {
     @Path("followers/{userid}")
     @Produces(MediaType.APPLICATION_JSON)
     public Set<User> followers(@PathParam("userid") long id) {
-        return null;
+        return userService.findFollowers(id);
     }
 
     @GET
     @Path("following/{userid}")
     @Produces(MediaType.APPLICATION_JSON)
     public Set<User> following(@PathParam("userid") long id) {
-        return null;
+        return userService.findFollowing(id);
     }
 
     /* POST */
@@ -67,5 +67,19 @@ public class UserResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public void register(User u) {
         userService.register(u);
+    }
+
+    @POST
+    @Path("follow/{userid}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void follow(@PathParam("userid") long id, long otheruser) {
+        userService.follow(id, otheruser);
+    }
+    
+    @POST
+    @Path("unfollow/{userid}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void unfollow(@PathParam("userid") long id, long otheruser) {
+        userService.unfollow(id, otheruser);
     }
 }
