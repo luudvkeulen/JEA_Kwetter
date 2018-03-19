@@ -51,18 +51,6 @@ public class UserResource {
 
     /* POST */
     @POST
-    @Path("promote/{userid}")
-    public void promote(@PathParam("userid") long id) {
-        userService.promote(id);
-    }
-
-    @POST
-    @Path("demote/{userid}")
-    public void demote(@PathParam("userid") long id) {
-        userService.demote(id);
-    }
-
-    @POST
     @Path("register")
     @Consumes(MediaType.APPLICATION_JSON)
     public void register(User u) {

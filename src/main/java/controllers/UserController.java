@@ -1,12 +1,14 @@
 package controllers;
 
 import domain.User;
+import domain.UserGroup;
 import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import service.UserGroupService;
 import service.UserService;
 
 @Named
@@ -16,9 +18,14 @@ public class UserController implements Serializable {
     @Inject
     private UserService userService;
 
+    @Inject
+    UserGroupService userGroupService;
+
     private List<User> users;
+    private List<UserGroup> userGroups;
 
     private User selectedUser;
+    private UserGroup selectedUserGroup;
 
     public User getSelectedUser() {
         return selectedUser;
@@ -28,6 +35,18 @@ public class UserController implements Serializable {
         this.selectedUser = selectedUser;
     }
 
+    public List<UserGroup> getUserGroups() {
+        return userGroups;
+    }
+
+    public UserGroup getSelectedUserGroup() {
+        return selectedUserGroup;
+    }
+
+    public void setSelectedUserGroup(UserGroup selectedUserGroup) {
+        this.selectedUserGroup = selectedUserGroup;
+    }
+
     public UserController() {
 
     }
@@ -35,20 +54,28 @@ public class UserController implements Serializable {
     @PostConstruct
     public void init() {
         this.users = userService.allUsers();
+        userGroups = userGroupService.findAll();
     }
 
     public List<User> getUsers() {
         return users;
     }
-
-    public void promote() {
-        userService.promote(selectedUser.getId());
-        this.users = userService.allUsers();
+    
+    public void addGroup() {
+        if(selectedUser.getGroups().contains(selectedUserGroup)) {
+            return;
+        }
+        
+        userService.addGroup(selectedUser, selectedUserGroup);
+        users = userService.allUsers();
     }
-
-    public void demote() {
-        userService.demote(selectedUser.getId());
-        this.users = userService.allUsers();
+    
+    public void removeGroup() {
+        if(!selectedUser.getGroups().contains(selectedUserGroup)) {
+            return;
+        }
+        
+        userService.removeGroup(selectedUser, selectedUserGroup);
+        users = userService.allUsers();
     }
-
 }

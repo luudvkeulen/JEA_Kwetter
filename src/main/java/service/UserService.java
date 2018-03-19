@@ -1,18 +1,23 @@
 package service;
 
 import dao.UserDAO;
+import dao.UserGroupDAO;
 import domain.User;
+import domain.UserGroup;
+import domain.UserRole;
 import java.util.List;
 import java.util.Set;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import org.mindrot.jbcrypt.BCrypt;
 
 @Stateless
 public class UserService {
 
     @Inject
     private UserDAO userDAO;
+    
+    @Inject
+    private UserGroupDAO userGroupDAO;
 
     public List<User> allUsers() {
         return userDAO.findAll();
@@ -34,21 +39,6 @@ public class UserService {
         return userDAO.findAllFollowers(id);
     }
 
-    public void promote(long id) {
-        User user = userDAO.findById(id);
-        if (user == null) {
-            return;
-        }
-        user.promote();
-    }
-
-    public void demote(long id) {
-        User user = userDAO.findById(id);
-        if (user != null) {
-            user.demote();
-        }
-    }
-
     public void follow(long userid, long otheruserid) {
         User user = userDAO.findById(userid);
         User otherUser = userDAO.findById(otheruserid);
@@ -65,12 +55,31 @@ public class UserService {
         }
     }
 
-    public boolean verifyPassword(String username, String password) {
-        List<User> foundUsers = userDAO.findByUsername(username);
-        if (foundUsers.isEmpty()) {
-            return false;
+    public void addGroup(User user, UserGroup userGroup) {
+        User persistedUser = userDAO.findById(user.getId());
+        if (persistedUser == null) {
+            return;
         }
-        User user = foundUsers.get(0);
-        return BCrypt.checkpw(password, user.getPassword());
+        
+        UserGroup persistedGroup = userGroupDAO.findByName(userGroup.getGroupName());
+        if(persistedGroup == null) {
+            return;
+        }
+
+        persistedUser.addGroup(persistedGroup);
+    }
+    
+    public void removeGroup(User user, UserGroup userGroup) {
+        User persistedUser = userDAO.findById(user.getId());
+        if (persistedUser == null) {
+            return;
+        }
+        
+        UserGroup persistedGroup = userGroupDAO.findByName(userGroup.getGroupName());
+        if(persistedGroup == null) {
+            return;
+        }
+        
+        persistedUser.removeGroup(persistedGroup);
     }
 }

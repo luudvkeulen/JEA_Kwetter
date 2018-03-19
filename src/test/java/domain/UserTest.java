@@ -91,43 +91,6 @@ public class UserTest {
     }
 
     /**
-     * Test of promote method, of class User.
-     */
-    @Test
-    public void testPromote() {
-        User user = new User();
-        assertEquals(UserRole.USER, user.getUserRole());
-
-        user.promote();
-        assertEquals(UserRole.MODERATOR, user.getUserRole());
-        user.promote();
-        assertEquals(UserRole.ADMIN, user.getUserRole());
-        //Promote again to check if there is nothing strange happening
-        user.promote();
-        assertEquals(UserRole.ADMIN, user.getUserRole());
-    }
-
-    /**
-     * Test of demote method, of class User.
-     */
-    @Test
-    public void testDemote() {
-        User user = new User();
-        //Promote twice to admin
-        user.promote();
-        user.promote();
-
-        assertEquals(UserRole.ADMIN, user.getUserRole());
-        user.demote();
-        assertEquals(UserRole.MODERATOR, user.getUserRole());
-        user.demote();
-        assertEquals(UserRole.USER, user.getUserRole());
-        //Demote again to check if there is nothing strange happening
-        user.demote();
-        assertEquals(UserRole.USER, user.getUserRole());
-    }
-
-    /**
      * Test of equals method, of class User.
      */
     @Test
