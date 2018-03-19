@@ -29,11 +29,18 @@
                 </p:column>
 
                 <p:column headerText="Rank">
-                    <h:outputText value="#{vuser.userRole}" />
+                    <h:outputText value="#{vuser.stringGroups}" />
                 </p:column> 
             </p:dataTable>
-            <p:commandButton value="Promote" update="users" actionListener="#{userController.promote}"/>
-            <p:commandButton value="Demote" update="users" actionListener="#{userController.demote}"/>
+            
+                        
+            <p:dataTable id="groups" var="vgroup" value="#{userController.userGroups}" selectionMode="single" selection="#{userController.selectedUserGroup}" rowKey="#{vgroup.groupName}">
+                <p:column headerText="Group">
+                    <h:outputText value="#{vgroup.groupName}" />
+                </p:column>
+            </p:dataTable>
+            <p:commandButton value="Add group" update="users" actionListener="#{userController.addGroup}"/>
+            <p:commandButton value="Remove group" update="users" actionListener="#{userController.removeGroup}"/>
         </h:form>
     </h:body>
 </html>

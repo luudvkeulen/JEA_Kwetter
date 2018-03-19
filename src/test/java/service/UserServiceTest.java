@@ -91,26 +91,5 @@ public class UserServiceTest {
         userService.findFollowers(1);
         
         verify(userDAO, times(1)).findAllFollowers(1);
-    }
-
-    /**
-     * Test of promote method, of class UserService.
-     */
-    @Test
-    public void testPromote() throws Exception {
-        userService.promote(1);
-        
-        verify(userDAO, times(1)).findById(1);
-    }
-
-    /**
-     * Test of demote method, of class UserService.
-     */
-    @Test
-    public void testDemote() throws Exception {
-        userService.demote(1);
-        
-        verify(userDAO, times(1)).findById(1);
-    }
-    
+    }  
 }

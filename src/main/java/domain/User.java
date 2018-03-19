@@ -1,6 +1,7 @@
 package domain;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
@@ -19,7 +20,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import org.mindrot.jbcrypt.BCrypt;
+import org.apache.commons.codec.digest.DigestUtils;
 
 @Entity
 @Model
@@ -46,8 +47,8 @@ public class User implements Serializable {
     @Column(unique = true)
     private String email;
     private String password;
-    @Enumerated(EnumType.ORDINAL)
-    private UserRole userRole = UserRole.USER;
+    @ManyToMany(mappedBy = "users", cascade = ALL)
+    private Set<UserGroup> groups = new HashSet<>();
     @OneToMany(mappedBy = "tweetedBy", cascade = ALL)
     private final Set<Tweet> tweets = new HashSet<>();
     @ManyToMany
@@ -91,8 +92,13 @@ public class User implements Serializable {
         return password;
     }
 
-    public UserRole getUserRole() {
-        return userRole;
+    @JsonbTransient
+    public Set<UserGroup> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(Set<UserGroup> groups) {
+        this.groups = groups;
     }
 
     @JsonbTransient
@@ -151,11 +157,17 @@ public class User implements Serializable {
     }
 
     public void setPassword(String password) {
-        this.password = BCrypt.hashpw(password, BCrypt.gensalt(12));
+        this.password = DigestUtils.sha512Hex(password);
     }
-
-    public void setUserRole(UserRole userRole) {
-        this.userRole = userRole;
+    
+    public String getStringGroups() {
+        String[] array = new String[groups.size()];
+        int index = 0;
+        for(UserGroup ug : groups) {
+            array[index] = ug.toString();
+            index++;
+        }
+        return Arrays.toString(array);
     }
 
     public User() {
@@ -165,7 +177,7 @@ public class User implements Serializable {
     public User(String email, String username, String password) {
         this.email = email;
         this.username = username;
-        this.password = BCrypt.hashpw(password, BCrypt.gensalt(12));
+        this.password = DigestUtils.sha512Hex(password);
     }
 
     public User(String email, String username, String password, String picture, String website, String firstName, String lastName, String bio, String location) {
@@ -208,38 +220,14 @@ public class User implements Serializable {
         return followers.remove(user);
     }
 
-    public UserRole promote() {
-        switch (userRole) {
-            case USER:
-                userRole = UserRole.MODERATOR;
-                break;
-            case MODERATOR:
-                userRole = UserRole.ADMIN;
-                break;
-            case ADMIN:
-                break;
-            default:
-                break;
-        }
-
-        return userRole;
+    public void addGroup(UserGroup group) {
+        this.groups.add(group);
+        group.addUser(this);
     }
-
-    public UserRole demote() {
-        switch (userRole) {
-            case MODERATOR:
-                userRole = UserRole.USER;
-                break;
-            case ADMIN:
-                userRole = UserRole.MODERATOR;
-                break;
-            case USER:
-                break;
-            default:
-                break;
-        }
-
-        return userRole;
+    
+    public void removeGroup(UserGroup group) {
+        this.groups.remove(group);
+        group.removeUser(this);
     }
 
     @Override
@@ -253,7 +241,6 @@ public class User implements Serializable {
         hash = 59 * hash + Objects.hashCode(this.location);
         hash = 59 * hash + Objects.hashCode(this.email);
         hash = 59 * hash + Objects.hashCode(this.password);
-        hash = 59 * hash + Objects.hashCode(this.userRole);
         return hash;
     }
 
