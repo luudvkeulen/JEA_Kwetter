@@ -31,7 +31,7 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "Tweet.findAll", query = "SELECT t FROM Tweet t"),
     @NamedQuery(name = "Tweet.findByMessage", query = "SELECT t FROM Tweet t WHERE t.message LIKE :message")
 })
-public class Tweet implements Serializable {
+public class Tweet implements Serializable, Comparable<Tweet> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -177,5 +177,16 @@ public class Tweet implements Serializable {
             return false;
         }
         return Objects.equals(this.mentions, other.mentions);
+    }
+
+    @Override
+    public int compareTo(Tweet o) {
+        if(this.published.before(o.published)) {
+            return 1;
+        } else if(this.published.after(o.published)) {
+            return -1;
+        } else {
+            return 0;
+        }
     }
 }

@@ -29,11 +29,10 @@
         <web-resource-collection>
             <web-resource-name>Secure Pages</web-resource-name>
             <description/>
-            <url-pattern>/*</url-pattern>
+            <url-pattern>/index.xhtml</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>admin_role</role-name>
         </auth-constraint>
     </security-constraint>
-
 </web-app>

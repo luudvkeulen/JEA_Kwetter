@@ -2,9 +2,11 @@ package service;
 
 import dao.UserDAO;
 import dao.UserGroupDAO;
+import domain.Tweet;
 import domain.User;
 import domain.UserGroup;
-import domain.UserRole;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import javax.ejb.Stateless;
@@ -15,7 +17,7 @@ public class UserService {
 
     @Inject
     private UserDAO userDAO;
-    
+
     @Inject
     private UserGroupDAO userGroupDAO;
 
@@ -60,26 +62,42 @@ public class UserService {
         if (persistedUser == null) {
             return;
         }
-        
+
         UserGroup persistedGroup = userGroupDAO.findByName(userGroup.getGroupName());
-        if(persistedGroup == null) {
+        if (persistedGroup == null) {
             return;
         }
 
         persistedUser.addGroup(persistedGroup);
     }
-    
+
     public void removeGroup(User user, UserGroup userGroup) {
         User persistedUser = userDAO.findById(user.getId());
         if (persistedUser == null) {
             return;
         }
-        
+
         UserGroup persistedGroup = userGroupDAO.findByName(userGroup.getGroupName());
-        if(persistedGroup == null) {
+        if (persistedGroup == null) {
             return;
         }
-        
+
         persistedUser.removeGroup(persistedGroup);
+    }
+
+    public List<Tweet> getTimeLine(long userid) {
+        User user = userDAO.findById(userid);
+        if (user == null) {
+            return new ArrayList<>();
+        }
+        
+        List<Tweet> tweets = new ArrayList<>();
+        Set<User> following = user.getFollowers();
+        for(User u : following) {
+            Set<Tweet> userTweets = u.getTweets();
+            tweets.addAll(userTweets);
+        }
+        Collections.sort(tweets);
+        return tweets;
     }
 }

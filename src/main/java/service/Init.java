@@ -37,8 +37,11 @@ public class Init {
         moderator.addGroup(modGroup);
         userDAO.insert(moderator);
         
-        //Generate users
-        int usercount = 25;
+        //Generation settings
+        final int usercount = 25;
+        final int tweets = 30;
+        
+        //Generate users;
         List<User> users = new ArrayList<>();
         for(int i = 0; i < usercount; i++) {
             User tempUser = new User("test" + i + "@test.com", "test" + i, "12345678", "", "test" + i + ".nl", "TestFN" + i, "TestLN" + 1, "Hello I am test" + i, "Eindhoven");
@@ -50,8 +53,8 @@ public class Init {
         Lorem lorem = LoremIpsum.getInstance();
         Random r = new Random();
         for(User u : users) {
-            int tweets = r.nextInt(10);
-            for(int i = 0; i < tweets; i++) {
+            int utweets = r.nextInt(tweets);
+            for(int i = 0; i < utweets; i++) {
                 u.tweet(lorem.getWords(2, 12));
             }
             
