@@ -11,7 +11,17 @@
             <p:commandButton  ajax="false" value="logout" action="#{loginController.logout}"/>
             <h1>Tweets</h1>
 
-            <p:dataTable id="tweets" var="vtweet" value="#{tweetController.tweets}" selectionMode="single" selection="#{tweetController.selectedTweet}" rowKey="#{vtweet.id}">
+            <p:dataTable 
+                id="tweets" 
+                var="vtweet" 
+                value="#{tweetController.tweets}" 
+                selectionMode="single" 
+                selection="#{tweetController.selectedTweet}" 
+                rowKey="#{vtweet.id}"
+                rows="10"
+                paginator="true"
+                paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                rowsPerPageTemplate="5,10,15">
                 <p:column headerText="User">
                     <h:outputText value="#{vtweet.tweetedBy.username}" />
                 </p:column>
@@ -22,8 +32,19 @@
             </p:dataTable>
 
             <p:commandButton value="Remove" update="tweets" actionListener="#{tweetController.delete}"/>
+            
             <h1>Users</h1>
-            <p:dataTable id="users" var="vuser" value="#{userController.users}" selectionMode="single" selection="#{userController.selectedUser}" rowKey="#{vuser.id}">
+            <p:dataTable 
+                id="users" 
+                var="vuser" 
+                value="#{userController.users}" 
+                selectionMode="single" 
+                selection="#{userController.selectedUser}" 
+                rowKey="#{vuser.id}"
+                rows="10"
+                paginator="true"
+                paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                rowsPerPageTemplate="5,10,15">
                 <p:column headerText="Username">
                     <h:outputText value="#{vuser.username}" />
                 </p:column>

@@ -26,7 +26,7 @@ public class UserResource {
     @Inject
     private UserService userService;
     
-    @Inject
+    //@Inject
     private KeyGenerator keyGenerator;
 
     /* GET */
