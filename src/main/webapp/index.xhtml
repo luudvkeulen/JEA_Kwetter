@@ -22,17 +22,19 @@
                 paginator="true"
                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                 rowsPerPageTemplate="5,10,15">
-                <p:column headerText="User">
+                <p:column headerText="User" sortBy="#{vtweet.tweetedBy.username}">
                     <h:outputText value="#{vtweet.tweetedBy.username}" />
                 </p:column>
 
-                <p:column headerText="Message">
+                <p:column headerText="Message" sortBy="#{vtweet.message}">
                     <h:outputText value="#{vtweet.message}" />
                 </p:column> 
             </p:dataTable>
 
-            <p:commandButton value="Remove" update="tweets" actionListener="#{tweetController.delete}"/>
-            
+            <p:contextMenu for="tweets">
+                <p:menuitem value="Delete" update="tweets" icon="ui-icon-close" actionListener="#{tweetController.delete}"/>
+            </p:contextMenu>
+
             <h1>Users</h1>
             <p:dataTable 
                 id="users" 
@@ -53,8 +55,8 @@
                     <h:outputText value="#{vuser.stringGroups}" />
                 </p:column> 
             </p:dataTable>
-            
-                        
+
+
             <p:dataTable id="groups" var="vgroup" value="#{userController.userGroups}" selectionMode="single" selection="#{userController.selectedUserGroup}" rowKey="#{vgroup.groupName}">
                 <p:column headerText="Group">
                     <h:outputText value="#{vgroup.groupName}" />
