@@ -5,9 +5,9 @@
         <property name="serverName" value="mysql"/>
         <property name="portNumber" value="3306"/>
         <property name="databaseName" value="kwetter"/>
-        <property name="User" value="kwetter"/>
-        <property name="Password" value="12345678"/>
-        <property name="URL" value="jdbc:mysql://localhost:3306/kwetter?useSSL=false"/>
+        <property name="User" value="luud"/>
+        <property name="Password" value="luud"/>
+        <property name="URL" value="jdbc:mysql://mysql:3306/kwetter?useSSL=false"/>
         <property name="driverClass" value="com.mysql.jdbc.Driver"/>
     </jdbc-connection-pool>
     <jdbc-resource enabled="true" jndi-name="java:app/jdbc/kwetter2" object-type="user" pool-name="mysql_kwetter_kwetterPool"/>
