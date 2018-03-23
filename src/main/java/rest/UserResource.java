@@ -4,7 +4,6 @@ import domain.Tweet;
 import domain.User;
 import java.util.List;
 import java.util.Set;
-import javax.crypto.KeyGenerator;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -14,6 +13,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import static javax.ws.rs.core.MediaType.*;
 import javax.ws.rs.core.Response;
@@ -25,9 +25,6 @@ public class UserResource {
 
     @Inject
     private UserService userService;
-    
-    //@Inject
-    private KeyGenerator keyGenerator;
 
     /* GET */
     @GET
@@ -85,12 +82,18 @@ public class UserResource {
     public void unfollow(@PathParam("userid") long id, long otheruser) {
         userService.unfollow(id, otheruser);
     }
-    
+
     @POST
     @Path("login")
     @Consumes(APPLICATION_FORM_URLENCODED)
-    public Response login(@FormParam("username") String username, @FormParam("password")String password) {
-        
+    public Response login(@FormParam("username") String username, @FormParam("password") String password) {
+        boolean valid = userService.authenticate(username, password);
+
+        if (valid) {
+            String token = userService.issueToken(username);
+            return Response.ok().header(HttpHeaders.AUTHORIZATION, "Bearer " + token).build();
+        }
+
         return Response.status(Response.Status.UNAUTHORIZED).build();
     }
 }

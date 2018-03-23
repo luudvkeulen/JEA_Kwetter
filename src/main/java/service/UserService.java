@@ -1,20 +1,26 @@
 package service;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTCreationException;
 import dao.UserDAO;
 import dao.UserGroupDAO;
 import domain.Tweet;
 import domain.User;
 import domain.UserGroup;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import org.apache.commons.codec.digest.DigestUtils;
 
 @Stateless
 public class UserService {
-
+    
     @Inject
     private UserDAO userDAO;
 
@@ -90,14 +96,39 @@ public class UserService {
         if (user == null) {
             return new ArrayList<>();
         }
-        
+
         List<Tweet> tweets = new ArrayList<>();
         Set<User> following = user.getFollowers();
-        for(User u : following) {
+        for (User u : following) {
             Set<Tweet> userTweets = u.getTweets();
             tweets.addAll(userTweets);
         }
         Collections.sort(tweets);
         return tweets;
+    }
+
+    public boolean authenticate(String username, String password) {
+        List<User> users = userDAO.findByUsername(username);
+        if (users.isEmpty()) {
+            return false;
+        }
+
+        User user = users.get(0);
+
+        String hashedPw = DigestUtils.sha512Hex(password);
+        return hashedPw.equals(user.getPassword());
+    }
+
+    public String issueToken(String login) {
+        Algorithm algorithm;
+        String token = "";
+        try {
+            algorithm = Algorithm.HMAC512("supersecret");
+            token = JWT.create().withSubject(login).withIssuer("Luud").sign(algorithm);
+        } catch (UnsupportedEncodingException exception) {
+            exception.printStackTrace();
+        }
+
+        return token;
     }
 }
