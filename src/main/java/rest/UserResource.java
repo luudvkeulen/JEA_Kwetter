@@ -2,7 +2,6 @@ package rest;
 
 import domain.User;
 import java.util.List;
-import java.util.Set;
 import javax.crypto.KeyGenerator;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
