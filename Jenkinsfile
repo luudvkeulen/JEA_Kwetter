@@ -2,8 +2,6 @@ def CONTAINER_NAME="kwetter"
 def CONTAINER_TAG="latest"
 
 node {
-    git url: 'https://github.com/luudvkeulen/Kwetter_Backend'
-
     stage('Initialize'){
         def dockerHome = tool 'Docker'
         def mavenHome  = tool 'Maven3'
