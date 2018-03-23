@@ -9,9 +9,9 @@ services:
       - "3307:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_USER=luud
-      - MYSQL_PASSWORD=luud
-
+      - MYSQL_USER=kwetter
+      - MYSQL_PASSWORD=12345678
+      - MYSQL_DATABASE=kwetter
   payara:
     build: .
     ports:
