@@ -1,9 +1,9 @@
 package rest;
 
-import domain.Tweet;
 import domain.User;
 import java.util.List;
 import java.util.Set;
+import javax.crypto.KeyGenerator;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -28,42 +28,42 @@ public class UserResource {
 
     /* GET */
     @GET
-    @Path("allusers")
     @Produces(APPLICATION_JSON)
     public List<User> allUsers() {
         return userService.allUsers();
     }
 
     @GET
-    @Path("findbyusername/{username}")
+    @Path("{username}")
     public List<User> findByUsername(@PathParam("username") String username) {
         return userService.findByUsername(username);
     }
 
     @GET
-    @Path("followers/{userid}")
+    @Path("{username}/followers")
     @Produces(MediaType.APPLICATION_JSON)
-    public Set<User> followers(@PathParam("userid") long id) {
-        return userService.findFollowers(id);
+    public Response followers(@PathParam("username") String username) {
+        //return userService.findFollowers(id);
+        return Response.ok().build();
     }
 
     @GET
-    @Path("following/{userid}")
+    @Path("{username}/following")
     @Produces(MediaType.APPLICATION_JSON)
-    public Set<User> following(@PathParam("userid") long id) {
-        return userService.findFollowing(id);
+    public Response following(@PathParam("username") String username) {
+        //return userService.findFollowing(id);
+        return Response.ok().build();
     }
 
-    @GET
-    @Path("timeline/{userid}")
+    /*@GET
+    @Path("{userid}/timeline")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Tweet> timeline(@PathParam("userid") long id) {
         return userService.getTimeLine(id);
-    }
+    }*/
 
     /* POST */
     @POST
-    @Path("register")
     @Consumes(MediaType.APPLICATION_JSON)
     public void register(User u) {
         userService.register(u);
