@@ -26,7 +26,7 @@ node {
 
     stage('Docker-compose'){
         try {
-            sh "sudo docker-compose down"
+            sh "sudo docker-compose down --rmi 'all'"
             sh "sudo docker-compose up -d"
         }catch(error){}
     }
