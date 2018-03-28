@@ -1,7 +1,7 @@
 version: '3.5'
 
 services:
-  mysql:
+  mysql-dev:
     image: mysql/mysql-server:5.7.21
     ports:
       - "3307:3306"
@@ -11,7 +11,7 @@ services:
       - MYSQL_USER=kwetter
       - MYSQL_PASSWORD=12345678
 
-  payara:
+  payara-dev:
     build: .
     ports:
       - "8181:8080"
