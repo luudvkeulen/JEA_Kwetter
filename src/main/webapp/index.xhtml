@@ -11,19 +11,42 @@
             <p:commandButton  ajax="false" value="logout" action="#{loginController.logout}"/>
             <h1>Tweets</h1>
 
-            <p:dataTable id="tweets" var="vtweet" value="#{tweetController.tweets}" selectionMode="single" selection="#{tweetController.selectedTweet}" rowKey="#{vtweet.id}">
-                <p:column headerText="User">
+            <p:dataTable 
+                id="tweets" 
+                var="vtweet" 
+                value="#{tweetController.tweets}" 
+                selectionMode="single" 
+                selection="#{tweetController.selectedTweet}" 
+                rowKey="#{vtweet.id}"
+                rows="10"
+                paginator="true"
+                paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                rowsPerPageTemplate="5,10,15">
+                <p:column headerText="User" sortBy="#{vtweet.tweetedBy.username}">
                     <h:outputText value="#{vtweet.tweetedBy.username}" />
                 </p:column>
 
-                <p:column headerText="Message">
+                <p:column headerText="Message" sortBy="#{vtweet.message}">
                     <h:outputText value="#{vtweet.message}" />
                 </p:column> 
             </p:dataTable>
 
-            <p:commandButton value="Remove" update="tweets" actionListener="#{tweetController.delete}"/>
+            <p:contextMenu for="tweets">
+                <p:menuitem value="Delete" update="tweets" icon="ui-icon-close" actionListener="#{tweetController.delete}"/>
+            </p:contextMenu>
+
             <h1>Users</h1>
-            <p:dataTable id="users" var="vuser" value="#{userController.users}" selectionMode="single" selection="#{userController.selectedUser}" rowKey="#{vuser.id}">
+            <p:dataTable 
+                id="users" 
+                var="vuser" 
+                value="#{userController.users}" 
+                selectionMode="single" 
+                selection="#{userController.selectedUser}" 
+                rowKey="#{vuser.id}"
+                rows="10"
+                paginator="true"
+                paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                rowsPerPageTemplate="5,10,15">
                 <p:column headerText="Username">
                     <h:outputText value="#{vuser.username}" />
                 </p:column>
@@ -32,8 +55,8 @@
                     <h:outputText value="#{vuser.stringGroups}" />
                 </p:column> 
             </p:dataTable>
-            
-                        
+
+
             <p:dataTable id="groups" var="vgroup" value="#{userController.userGroups}" selectionMode="single" selection="#{userController.selectedUserGroup}" rowKey="#{vgroup.groupName}">
                 <p:column headerText="Group">
                     <h:outputText value="#{vgroup.groupName}" />

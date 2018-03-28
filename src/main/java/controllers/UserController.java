@@ -54,7 +54,7 @@ public class UserController implements Serializable {
     @PostConstruct
     public void init() {
         this.users = userService.allUsers();
-        userGroups = userGroupService.findAll();
+        this.userGroups = userGroupService.findAll();
     }
 
     public List<User> getUsers() {
