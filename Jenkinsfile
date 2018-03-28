@@ -40,9 +40,16 @@ node {
     }
 
     stage('Docker-compose'){
-        try {
-            sh "sudo docker-compose down --rmi 'all'"
-            sh "sudo docker-compose up --build -d"
-        }catch(error){}
+        if(env.BRANCH_NAME == 'dev'){
+            try {
+                sh "sudo docker-compose -f docker-compose-dev.yml up --build -d"
+            }catch(error){}
+        }
+
+        if(env.BRANCH_NAME == 'master'){
+            try {
+                sh "sudo docker-compose -f docker-compose-prod.yml up --build -d"
+            }catch(error){}
+        }
     }
 }
