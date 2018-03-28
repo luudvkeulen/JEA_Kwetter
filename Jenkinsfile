@@ -34,7 +34,7 @@ node {
 	rtMaven.deployer.deployArtifacts = true
 
 	buildInfo = Artifactory.newBuildInfo()
-	rtMaven.run pom: 'pom.xml', goals: 'clean install', buildInfo: buildInfo
+	rtMaven.run pom: 'pom.xml', goals: 'clean install -U', buildInfo: buildInfo
 	rtMaven.deployer.deployArtifacts buildInfo
 	server.publishBuildInfo buildInfo
     }
