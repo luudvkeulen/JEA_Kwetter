@@ -40,7 +40,7 @@ node {
     }*/
 
     stage('Docker-compose'){
-        echo env.BRANCH_NAME
+        echo scm.branches[0].name
         if(env.BRANCH_NAME == 'dev'){
             try {
                 sh "sudo docker-compose -f docker-compose-dev.yml up --build -d"
