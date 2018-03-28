@@ -5,7 +5,6 @@ node {
     stage('Initialize'){
         def dockerHome = tool 'Docker'
         def mavenHome  = tool 'Maven3'
-        def artifactory = Artifactory.server 'Artifactory'
         env.PATH = "${dockerHome}/bin:${mavenHome}/bin:${env.PATH}"
     }
 
@@ -26,10 +25,12 @@ node {
     }
 
     stage('Artifactory'){
+        def server = Artifactory.server 'Artifactory'
+
         rtMaven = Artifactory.newMavenBuild()
 	rtMaven.tool = 'Maven3' // Tool name from Jenkins configuration
-	rtMaven.deployer releaseRepo: 'libs-release-local', snapshotRepo: 'libs-snapshot-local', server: artifactory
-	rtMaven.resolver releaseRepo: 'libs-release', snapshotRepo: 'libs-snapshot', server: artifactory
+	rtMaven.deployer releaseRepo: 'libs-release-local', snapshotRepo: 'libs-snapshot-local', server: server
+	rtMaven.resolver releaseRepo: 'libs-release', snapshotRepo: 'libs-snapshot', server: server
 	rtMaven.deployer.deployArtifacts = true
 
 	buildInfo = Artifactory.newBuildInfo()
