@@ -40,16 +40,8 @@ node {
     }*/
 
     stage('Docker-compose'){
-        if(env.BRANCH_NAME == 'dev'){
-            try {
-                sh "sudo docker-compose -f docker-compose-dev.yml up --build -d"
-            }catch(error){}
-        }
-
-        if(env.BRANCH_NAME == 'master'){
-            try {
-                sh "sudo docker-compose -f docker-compose-prod.yml up --build -d"
-            }catch(error){}
-        }
+        try {
+            sh "sudo docker-compose -f docker-compose-prod.yml up --build -d"
+        }catch(error){}
     }
 }
