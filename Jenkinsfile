@@ -24,7 +24,7 @@ node {
         }
     }
 
-    stage('Artifactory'){
+    /*stage('Artifactory'){
         def server = Artifactory.server 'Artifactory'
 
         rtMaven = Artifactory.newMavenBuild()
@@ -37,7 +37,7 @@ node {
 	rtMaven.run pom: 'pom.xml', goals: 'clean install', buildInfo: buildInfo
 	rtMaven.deployer.deployArtifacts buildInfo
 	server.publishBuildInfo buildInfo
-    }
+    }*/
 
     stage('Docker-compose'){
         if(env.BRANCH_NAME == 'dev'){
