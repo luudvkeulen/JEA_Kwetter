@@ -29,8 +29,11 @@ import javax.persistence.TemporalType;
 @Entity
 @Model
 @NamedQueries({
-    @NamedQuery(name = "Tweet.findAll", query = "SELECT t FROM Tweet t"),
+    @NamedQuery(name = "Tweet.findAll", query = "SELECT t FROM Tweet t")
+    ,
     @NamedQuery(name = "Tweet.findByMessage", query = "SELECT t FROM Tweet t WHERE t.message LIKE :message")
+    ,
+    @NamedQuery(name = "Tweet.getFromUser", query = "SELECT t FROM Tweet t WHERE t.tweetedBy.username = :username")
 })
 public class Tweet implements Serializable, Comparable<Tweet> {
 
@@ -58,7 +61,7 @@ public class Tweet implements Serializable, Comparable<Tweet> {
         return message;
     }
 
-     @JsonbDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+    @JsonbDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
     public Date getPublished() {
         return published;
     }
@@ -183,9 +186,9 @@ public class Tweet implements Serializable, Comparable<Tweet> {
 
     @Override
     public int compareTo(Tweet o) {
-        if(this.published.before(o.published)) {
+        if (this.published.before(o.published)) {
             return 1;
-        } else if(this.published.after(o.published)) {
+        } else if (this.published.after(o.published)) {
             return -1;
         } else {
             return 0;

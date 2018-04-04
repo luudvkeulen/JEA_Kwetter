@@ -5,79 +5,56 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import static javax.ws.rs.core.MediaType.*;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import javax.ws.rs.core.Response;
 import service.UserService;
 
-@Path("users")
+/**
+ * This is a rest resource which is available for the currently logged in user.
+ *
+ * @author Luud
+ */
+@Path("user")
+@Produces(APPLICATION_JSON)
+@Consumes(APPLICATION_JSON)
 @Stateless
+@JWTTokenNeeded
 public class UserResource {
 
     @Inject
     private UserService userService;
 
-    /* GET */
     @GET
-    @Produces(APPLICATION_JSON)
-    public List<User> allUsers() {
-        return userService.allUsers();
+    public Response get() {
+        List<User> users = userService.findByUsername("");
+        if (users != null && users.size() == 1) {
+            return Response.ok(users.get(0)).build();
+        }
+        return Response.serverError().build();
     }
 
     @GET
-    @Path("{username}")
-    public List<User> findByUsername(@PathParam("username") String username) {
-        return userService.findByUsername(username);
+    @Path("timeline")
+    public Response timeline() {
+        //return userService.getTimeLine(1);
+        return Response.noContent().build();
     }
 
-    @GET
-    @Path("{username}/followers")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response followers(@PathParam("username") String username) {
-        //return userService.findFollowers(id);
+    @PUT
+    @Path("following/:username")
+    public Response follow(@PathParam("username") String username) {
         return Response.ok().build();
     }
-
-    @GET
-    @Path("{username}/following")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response following(@PathParam("username") String username) {
-        //return userService.findFollowing(id);
+    
+    @DELETE
+    @Path("following/:username")
+    public Response unfollow(@PathParam("username") String username) {
         return Response.ok().build();
-    }
-
-    /*@GET
-    @Path("{userid}/timeline")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<Tweet> timeline(@PathParam("userid") long id) {
-        return userService.getTimeLine(id);
-    }*/
-
-    /* POST */
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void register(User u) {
-        userService.register(u);
-    }
-
-    @POST
-    @Path("follow/{userid}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void follow(@PathParam("userid") long id, long otheruser) {
-        userService.follow(id, otheruser);
-    }
-
-    @POST
-    @Path("unfollow/{userid}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void unfollow(@PathParam("userid") long id, long otheruser) {
-        userService.unfollow(id, otheruser);
     }
 }

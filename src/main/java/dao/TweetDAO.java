@@ -10,6 +10,8 @@ public interface TweetDAO {
     Tweet findById(long id);
 
     List<Tweet> findByMessage(String query);
+    
+    List<Tweet> getTweetsFromUser(String username);
 
     boolean insert(Tweet tweet);
 

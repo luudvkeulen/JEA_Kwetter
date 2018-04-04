@@ -29,16 +29,16 @@ public class UserService {
         return userDAO.findByUsername(username);
     }
 
-    public void register(User u) {
-        userDAO.insert(u);
+    public boolean register(User u) {
+        return userDAO.insert(u);
     }
 
-    public Set<User> findFollowing(long id) {
-        return userDAO.findAllFollowing(id);
+    public List<User> findFollowing(String username) {
+        return new ArrayList<>(userDAO.findAllFollowing(username));
     }
 
-    public Set<User> findFollowers(long id) {
-        return userDAO.findAllFollowers(id);
+    public List<User> findFollowers(String username) {
+        return new ArrayList<>(userDAO.findAllFollowers(username));
     }
 
     public void follow(long userid, long otheruserid) {

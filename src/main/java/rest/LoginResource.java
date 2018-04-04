@@ -21,20 +21,6 @@ public class LoginResource {
 
     @Inject
     private LoginService loginService;
-
-    /*@POST
-    public Response login(@FormParam("username") String username, @FormParam("password") String password) {
-        boolean valid = loginService.authenticate(username, password);
-
-        if (valid) {
-            String token = loginService.issueToken(username);
-            return Response.ok()
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                    .build();
-        }
-
-        return Response.status(Response.Status.UNAUTHORIZED).build();
-    }*/
     
     @POST
     public Response login(User user) {

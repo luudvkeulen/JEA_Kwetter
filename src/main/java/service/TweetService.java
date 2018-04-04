@@ -75,4 +75,8 @@ public class TweetService {
         Tweet tweet = tweetDAO.findById(tweetid);
         tweetDAO.delete(tweet);
     }
+    
+    public List<Tweet> getTweetsFromUser(String username) {
+        return tweetDAO.getTweetsFromUser(username);
+    }
 }

@@ -14,9 +14,9 @@ public interface UserDAO {
 
     List<User> findByUsername(String username);
 
-    Set<User> findAllFollowers(long id);
+    Set<User> findAllFollowers(String username);
 
-    Set<User> findAllFollowing(long id);
+    Set<User> findAllFollowing(String username);
 
     boolean insert(User user);
 

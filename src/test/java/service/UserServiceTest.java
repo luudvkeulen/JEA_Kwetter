@@ -78,9 +78,9 @@ public class UserServiceTest {
      */
     @Test
     public void testFindFollowing() throws Exception {
-        userService.findFollowing(1);
+        userService.findFollowing("");
         
-        verify(userDAO, times(1)).findAllFollowing(1);
+        verify(userDAO, times(1)).findAllFollowing("");
     }
 
     /**
@@ -88,8 +88,8 @@ public class UserServiceTest {
      */
     @Test
     public void testFindFollowers() throws Exception {
-        userService.findFollowers(1);
+        userService.findFollowers("");
         
-        verify(userDAO, times(1)).findAllFollowers(1);
+        verify(userDAO, times(1)).findAllFollowers("");
     }  
 }

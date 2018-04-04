@@ -45,4 +45,9 @@ public class TweetDAOImpl implements TweetDAO {
         return true;
     }
 
+    @Override
+    public List<Tweet> getTweetsFromUser(String username) {
+        return em.createNamedQuery("Tweet.getFromUser").setParameter("username", username).getResultList();
+    }
+
 }
