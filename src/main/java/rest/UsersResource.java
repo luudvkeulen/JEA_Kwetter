@@ -9,11 +9,13 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import static javax.ws.rs.core.MediaType.*;
 import static javax.ws.rs.core.Response.Status.*;
 import javax.ws.rs.core.Response;
@@ -39,8 +41,12 @@ public class UsersResource {
     private TweetService tweetService;
 
     @GET
-    public Response allUsers() {
-        List<User> users = userService.allUsers();
+    public Response get(
+            @DefaultValue("0") @QueryParam("offset") int offset,
+            @DefaultValue("20") @QueryParam("limit") int limit) {
+        if(offset < 0) offset = 0;
+        if(limit < 1 || limit > 20) limit = 20;
+        List<User> users = userService.allUsers(offset, limit);
         List<UserDTO> usersToReturn = ConvertToDTO.USERSTODTOS(users);
 
         return Response.ok(usersToReturn).build();
@@ -51,7 +57,7 @@ public class UsersResource {
         if (userService.register(u)) {
             return Response.ok().build();
         }
-        
+
         return Response.serverError().build();
     }
 

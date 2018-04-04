@@ -11,6 +11,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import javax.ws.rs.core.Response;
 import service.UserService;
@@ -41,7 +42,10 @@ public class UserResource {
 
     @GET
     @Path("timeline")
-    public Response timeline() {
+    public Response timeline(
+            @QueryParam("offset") int offset,
+            @QueryParam("limit") int limit) {
+        System.out.println("Offset: " + offset);
         //return userService.getTimeLine(1);
         return Response.noContent().build();
     }
@@ -51,7 +55,7 @@ public class UserResource {
     public Response follow(@PathParam("username") String username) {
         return Response.ok().build();
     }
-    
+
     @DELETE
     @Path("following/:username")
     public Response unfollow(@PathParam("username") String username) {

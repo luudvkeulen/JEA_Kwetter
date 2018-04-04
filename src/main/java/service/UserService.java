@@ -21,8 +21,12 @@ public class UserService {
     @Inject
     private UserGroupDAO userGroupDAO;
 
-    public List<User> allUsers() {
+    public List<User> allUsers(int offset, int limit) {
         return userDAO.findAll();
+    }
+    
+    public List<User> allUsers() {
+        return allUsers(0, 20);
     }
 
     public List<User> findByUsername(String username) {
