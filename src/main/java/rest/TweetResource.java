@@ -23,7 +23,6 @@ public class TweetResource {
 
     /* GET */
     @GET
-    @Path("all")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Tweet> all() {
         return tweetService.allTweets();

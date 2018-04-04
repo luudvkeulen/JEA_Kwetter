@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.enterprise.inject.Model;
+import javax.json.bind.annotation.JsonbDateFormat;
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -57,6 +58,7 @@ public class Tweet implements Serializable, Comparable<Tweet> {
         return message;
     }
 
+     @JsonbDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
     public Date getPublished() {
         return published;
     }

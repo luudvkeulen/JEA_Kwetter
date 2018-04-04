@@ -2,7 +2,6 @@ package rest;
 
 import domain.User;
 import java.util.List;
-import javax.crypto.KeyGenerator;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -80,19 +79,5 @@ public class UserResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public void unfollow(@PathParam("userid") long id, long otheruser) {
         userService.unfollow(id, otheruser);
-    }
-
-    @POST
-    @Path("login")
-    @Consumes(APPLICATION_FORM_URLENCODED)
-    public Response login(@FormParam("username") String username, @FormParam("password") String password) {
-        boolean valid = userService.authenticate(username, password);
-
-        if (valid) {
-            String token = userService.issueToken(username);
-            return Response.ok().header(HttpHeaders.AUTHORIZATION, "Bearer " + token).build();
-        }
-
-        return Response.status(Response.Status.UNAUTHORIZED).build();
     }
 }
