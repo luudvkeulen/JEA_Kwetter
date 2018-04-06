@@ -1,6 +1,10 @@
 package rest;
 
+import domain.Tweet;
 import domain.User;
+import dto.TweetDTO;
+import dto.UserDTO;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -12,8 +16,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import service.UserService;
 
 /**
@@ -31,11 +37,30 @@ public class UserResource {
     @Inject
     private UserService userService;
 
+    @Context
+    SecurityContext securityContext;
+
     @GET
     public Response get() {
-        List<User> users = userService.findByUsername("");
+        String username = securityContext.getUserPrincipal().getName();
+        List<User> users = userService.findByUsername(username);
         if (users != null && users.size() == 1) {
-            return Response.ok(users.get(0)).build();
+            User u = users.get(0);
+            UserDTO userDTO = new UserDTO(
+                    u.getId(),
+                    u.getUsername(),
+                    u.getFirstName(),
+                    u.getLastName(),
+                    u.getPicture(),
+                    u.getWebsite(),
+                    u.getBio(),
+                    u.getLocation(),
+                    u.getEmail(),
+                    u.getTweets().size(),
+                    u.getFollowing().size(),
+                    u.getFollowers().size()
+            );
+            return Response.ok(userDTO).build();
         }
         return Response.serverError().build();
     }
@@ -44,10 +69,23 @@ public class UserResource {
     @Path("timeline")
     public Response timeline(
             @QueryParam("offset") int offset,
-            @QueryParam("limit") int limit) {
-        System.out.println("Offset: " + offset);
-        //return userService.getTimeLine(1);
-        return Response.noContent().build();
+            @QueryParam("limit") int limit,
+            @Context SecurityContext securityContext) {
+        String username = securityContext.getUserPrincipal().getName();
+        List<Tweet> timelineRaw = userService.getTimeLine(username, offset, limit);
+        List<TweetDTO> timelineDTO = new ArrayList<>();
+        for(Tweet t : timelineRaw) {
+            TweetDTO tweetDTO = new TweetDTO(
+            t.getId(),
+            t.getTweetedBy().getUsername(),
+            t.getMessage(),
+           t.getPublished(),
+            t.getTags(),
+            t.getLikes(),
+            t.getMentions());
+            timelineDTO.add(tweetDTO);
+        }
+        return Response.ok(timelineDTO).build();
     }
 
     @PUT

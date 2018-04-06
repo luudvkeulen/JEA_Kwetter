@@ -29,11 +29,13 @@ public class Init {
         
         //Create and persist admin
         User admin = new User("admin@admin.com", "admin", "admin");
+        admin.setPicture("https://s-media-cache-ak0.pinimg.com/originals/73/be/49/73be498fcfc76c204e66686914de4beb.jpg");
         admin.addGroup(adminGroup);
         userDAO.insert(admin);
         
         //Create and persist moderator
         User moderator = new User("mod@mod.com", "moderator", "moderator");
+        moderator.setPicture("http://www.animalgalleries.org/albums/Large-Land-Mammals/Wolf/Grey%20Wolf%20Mexican%20Wolf%20Canis%20Lupus.jpg");
         moderator.addGroup(modGroup);
         userDAO.insert(moderator);
         
@@ -44,7 +46,7 @@ public class Init {
         //Generate users;
         List<User> users = new ArrayList<>();
         for(int i = 0; i < usercount; i++) {
-            User tempUser = new User("test" + i + "@test.com", "test" + i, "12345678", "", "test" + i + ".nl", "TestFN" + i, "TestLN" + 1, "Hello I am test" + i, "Eindhoven");
+            User tempUser = new User("test" + i + "@test.com", "test" + i, "12345678", "https://picsum.photos/300/300/?random", "test" + i + ".nl", "TestFN" + i, "TestLN" + 1, "Hello I am test" + i, "Eindhoven");
             tempUser.addGroup(userGroup);
             userDAO.insert(tempUser);
             users.add(tempUser);

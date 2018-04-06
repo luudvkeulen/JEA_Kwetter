@@ -104,5 +104,23 @@ public class UserService {
         Collections.sort(tweets);
         return tweets;
     }
+    
+    public List<Tweet> getTimeLine(String username, int offset, int limit) {
+        List<User> users = userDAO.findByUsername(username);
+        if (users == null || users.size() != 1) {
+            return new ArrayList<>();
+        }
+        User user = users.get(0);
+        
+        List<Tweet> tweets = new ArrayList<>();
+        Set<User> following = user.getFollowers();
+        for (User u : following) {
+            Set<Tweet> userTweets = u.getTweets();
+            tweets.addAll(userTweets);
+        }
+        Collections.sort(tweets);
+        int toIndex = tweets.size() < (offset + limit) ? tweets.size() : (offset + limit);
+        return tweets.subList(offset, toIndex);
+    }
 
 }

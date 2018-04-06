@@ -1,8 +1,12 @@
 package dto;
 
+import domain.User;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import javax.json.bind.annotation.JsonbDateFormat;
 
 public class TweetDTO implements Serializable {
 
@@ -31,6 +35,7 @@ public class TweetDTO implements Serializable {
         return message;
     }
 
+    @JsonbDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
     public Date getPublished() {
         return published;
     }
@@ -79,15 +84,22 @@ public class TweetDTO implements Serializable {
         this.mentions = mentions;
     }
 
-    public TweetDTO(Long id, String tweetedByString, String message, Date published, List<String> tags, List<String> likes, List<String> mentions) {
+    public TweetDTO(Long id, String tweetedByString, String message, Date published, List<String> tags, Set<User> likes, Set<User> mentions) {
         this.id = id;
         this.tweetedByString = tweetedByString;
         this.tweetedBy_url = "http://localhost:8080/Kwetter/api/users/" + tweetedByString;
         this.message = message;
         this.published = published;
         this.tags = tags;
-        this.likes = likes;
-        this.mentions = mentions;
+        this.likes = new ArrayList<>();
+        likes.forEach((u) -> {
+            this.likes.add(u.getUsername());
+        });
+
+        this.mentions = new ArrayList<>();
+        mentions.forEach((u) -> {
+            this.likes.add(u.getUsername());
+        });
     }
 
 }
