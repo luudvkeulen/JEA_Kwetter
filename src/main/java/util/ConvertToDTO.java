@@ -42,22 +42,14 @@ public class ConvertToDTO {
         }
 
         for (Tweet t : tweets) {
-            List<String> likes = new ArrayList<>();
-            for (User u : t.getLikes()) {
-                likes.add(u.getUsername());
-            }
-            List<String> mentions = new ArrayList<>();
-            for (User u : t.getMentions()) {
-                mentions.add(u.getUsername());
-            }
             TweetDTO tweetDTO = new TweetDTO(
                     t.getId(),
                     t.getTweetedBy().getUsername(),
                     t.getMessage(),
                     t.getPublished(),
                     t.getTags(),
-                    likes,
-                    mentions);
+                    t.getLikes(),
+                    t.getMentions());
             tweetDTOs.add(tweetDTO);
         }
 

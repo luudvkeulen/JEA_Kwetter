@@ -20,7 +20,9 @@ import javax.ws.rs.core.Context;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import service.TweetService;
 import service.UserService;
+import util.ConvertToDTO;
 
 /**
  * This is a rest resource which is available for the currently logged in user.
@@ -36,6 +38,8 @@ public class UserResource {
 
     @Inject
     private UserService userService;
+    @Inject
+    private TweetService tweetService;
 
     @Context
     SecurityContext securityContext;
@@ -64,6 +68,12 @@ public class UserResource {
         }
         return Response.serverError().build();
     }
+    
+    @PUT
+    @Path("tweets")
+    public Response tweet() {
+        return Response.ok().build();
+    }
 
     @GET
     @Path("timeline")
@@ -73,18 +83,7 @@ public class UserResource {
             @Context SecurityContext securityContext) {
         String username = securityContext.getUserPrincipal().getName();
         List<Tweet> timelineRaw = userService.getTimeLine(username, offset, limit);
-        List<TweetDTO> timelineDTO = new ArrayList<>();
-        for(Tweet t : timelineRaw) {
-            TweetDTO tweetDTO = new TweetDTO(
-            t.getId(),
-            t.getTweetedBy().getUsername(),
-            t.getMessage(),
-           t.getPublished(),
-            t.getTags(),
-            t.getLikes(),
-            t.getMentions());
-            timelineDTO.add(tweetDTO);
-        }
+        List<TweetDTO> timelineDTO = ConvertToDTO.TWEETSTODTOS(timelineRaw);
         return Response.ok(timelineDTO).build();
     }
 
