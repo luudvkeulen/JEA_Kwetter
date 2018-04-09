@@ -28,9 +28,9 @@ public class TweetDAOImpl implements TweetDAO {
     }
 
     @Override
-    public boolean insert(Tweet tweet) {
+    public Tweet insert(Tweet tweet) {
         em.persist(tweet);
-        return true;
+        return tweet;
     }
 
     @Override

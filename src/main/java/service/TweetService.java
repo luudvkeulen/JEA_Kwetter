@@ -43,12 +43,12 @@ public class TweetService {
         return tweetDAO.findById(id);
     }
 
-    public void tweet(Tweet tweet) {
+    public Tweet tweet(Tweet tweet) {
         findMentions(tweet.getMessage()).forEach(u
                 -> tweet.addMention(u)
         );
 
-        tweetDAO.insert(tweet);
+        return tweetDAO.insert(tweet);
     }
 
     public List<Tweet> findByMessage(String query) {

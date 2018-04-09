@@ -84,6 +84,10 @@ public class TweetDTO implements Serializable {
         this.mentions = mentions;
     }
 
+    public TweetDTO() {
+        
+    }
+    
     public TweetDTO(Long id, String tweetedByString, String message, Date published, List<String> tags, Set<User> likes, Set<User> mentions) {
         this.id = id;
         this.tweetedByString = tweetedByString;

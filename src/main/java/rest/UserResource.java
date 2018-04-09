@@ -5,6 +5,7 @@ import domain.User;
 import dto.TweetDTO;
 import dto.UserDTO;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -71,8 +72,29 @@ public class UserResource {
     
     @PUT
     @Path("tweets")
-    public Response tweet() {
-        return Response.ok().build();
+    public Response tweet(TweetDTO tweetDTO) {
+        Tweet tweet = new Tweet();
+        tweet.setMessage(tweetDTO.getMessage());
+        String username = securityContext.getUserPrincipal().getName();
+        List<User> users = userService.findByUsername(username);
+        if(users == null || users.isEmpty()) {
+            return Response.serverError().build();
+        }
+        User user = users.get(0);
+        tweet.setTweetedBy(user);
+        tweet.setPublished(new Date());
+        
+        Tweet persistedTweet = tweetService.tweet(tweet);
+       TweetDTO persistedTweetDTO = new TweetDTO(
+               persistedTweet.getId(),
+               persistedTweet.getTweetedBy().getUsername(),
+               persistedTweet.getMessage(),
+               persistedTweet.getPublished(),
+               persistedTweet.getTags(),
+               persistedTweet.getLikes(),
+               persistedTweet.getMentions()
+       );
+        return Response.ok(persistedTweetDTO).build();
     }
 
     @GET

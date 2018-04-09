@@ -13,7 +13,7 @@ public interface TweetDAO {
     
     List<Tweet> getTweetsFromUser(String username);
 
-    boolean insert(Tweet tweet);
+    Tweet insert(Tweet tweet);
 
     boolean update(Tweet tweet);
 
