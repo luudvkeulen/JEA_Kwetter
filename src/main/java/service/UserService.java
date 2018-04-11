@@ -22,7 +22,9 @@ public class UserService {
     private UserGroupDAO userGroupDAO;
 
     public List<User> allUsers(int offset, int limit) {
-        return userDAO.findAll();
+        List<User> users = userDAO.findAll();
+        int toIndex = users.size() < (offset + limit) ? users.size() : (offset + limit);
+        return users.subList(offset, toIndex);
     }
     
     public List<User> allUsers() {
@@ -88,22 +90,6 @@ public class UserService {
 
         persistedUser.removeGroup(persistedGroup);
     }
-
-    public List<Tweet> getTimeLine(long userid) {
-        User user = userDAO.findById(userid);
-        if (user == null) {
-            return new ArrayList<>();
-        }
-
-        List<Tweet> tweets = new ArrayList<>();
-        Set<User> following = user.getFollowers();
-        for (User u : following) {
-            Set<Tweet> userTweets = u.getTweets();
-            tweets.addAll(userTweets);
-        }
-        Collections.sort(tweets);
-        return tweets;
-    }
     
     public List<Tweet> getTimeLine(String username, int offset, int limit) {
         List<User> users = userDAO.findByUsername(username);
@@ -118,6 +104,7 @@ public class UserService {
             Set<Tweet> userTweets = u.getTweets();
             tweets.addAll(userTweets);
         }
+        tweets.addAll(user.getTweets());
         Collections.sort(tweets);
         int toIndex = tweets.size() < (offset + limit) ? tweets.size() : (offset + limit);
         return tweets.subList(offset, toIndex);

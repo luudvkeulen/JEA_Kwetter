@@ -11,6 +11,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -73,15 +74,14 @@ public class UserResource {
     @PUT
     @Path("tweets")
     public Response tweet(TweetDTO tweetDTO) {
-        Tweet tweet = new Tweet();
-        tweet.setMessage(tweetDTO.getMessage());
+        
         String username = securityContext.getUserPrincipal().getName();
         List<User> users = userService.findByUsername(username);
         if (users == null || users.isEmpty()) {
             return Response.serverError().build();
         }
         User user = users.get(0);
-        tweet.setTweetedBy(user);
+        Tweet tweet = user.tweet(tweetDTO.getMessage());
         tweet.setPublished(new Date());
         tweet.fillTags();
 
@@ -103,8 +103,8 @@ public class UserResource {
     @GET
     @Path("timeline")
     public Response timeline(
-            @QueryParam("offset") int offset,
-            @QueryParam("limit") int limit,
+            @DefaultValue("0") @QueryParam("offset") int offset,
+            @DefaultValue("20") @QueryParam("limit") int limit,
             @Context SecurityContext securityContext) {
         String username = securityContext.getUserPrincipal().getName();
         List<Tweet> timelineRaw = userService.getTimeLine(username, offset, limit);

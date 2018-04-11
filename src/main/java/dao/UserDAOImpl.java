@@ -35,7 +35,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public List<User> findByUsername(String username) {
-        return em.createNamedQuery("User.findByUsername").setParameter("username", username).getResultList();
+        return em.createNamedQuery("User.findByUsername").setParameter("username", "%"+ username + "%").getResultList();
     }
 
     @Override

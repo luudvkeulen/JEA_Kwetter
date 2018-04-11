@@ -4,10 +4,10 @@ import domain.Tweet;
 import domain.User;
 import dto.TweetDTO;
 import dto.UserDTO;
-import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.validation.constraints.Size;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -42,10 +42,10 @@ public class UsersResource {
 
     @GET
     public Response get(
-            @DefaultValue("0") @QueryParam("offset") int offset,
-            @DefaultValue("20") @QueryParam("limit") int limit) {
-        if(offset < 0) offset = 0;
-        if(limit < 1 || limit > 20) limit = 20;
+            @DefaultValue("0")
+            @QueryParam("offset") int offset,
+            @DefaultValue("20")
+            @QueryParam("limit") int limit) {
         List<User> users = userService.allUsers(offset, limit);
         List<UserDTO> usersToReturn = ConvertToDTO.USERSTODTOS(users);
 
@@ -69,9 +69,9 @@ public class UsersResource {
         if (dtoUsers == null || dtoUsers.isEmpty()) {
             return Response.status(NOT_FOUND).build();
         }
-        UserDTO user = dtoUsers.get(0);
+        //UserDTO user = dtoUsers.get(0);
 
-        return Response.ok(user).build();
+        return Response.ok(dtoUsers).build();
     }
 
     @GET
