@@ -106,7 +106,6 @@ public class Tweet implements Serializable, Comparable<Tweet> {
     }
 
     public Tweet() {
-
     }
 
     public Tweet(String message, User user) {
@@ -132,6 +131,10 @@ public class Tweet implements Serializable, Comparable<Tweet> {
 
     public void addMention(User user) {
         this.mentions.add(user);
+    }
+    
+    public void fillTags() {
+        this.tags = this.findTags(message);
     }
 
     private List<String> findTags(String message) {

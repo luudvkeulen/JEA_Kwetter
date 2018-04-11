@@ -69,7 +69,7 @@ public class UserResource {
         }
         return Response.serverError().build();
     }
-    
+
     @PUT
     @Path("tweets")
     public Response tweet(TweetDTO tweetDTO) {
@@ -77,23 +77,26 @@ public class UserResource {
         tweet.setMessage(tweetDTO.getMessage());
         String username = securityContext.getUserPrincipal().getName();
         List<User> users = userService.findByUsername(username);
-        if(users == null || users.isEmpty()) {
+        if (users == null || users.isEmpty()) {
             return Response.serverError().build();
         }
         User user = users.get(0);
         tweet.setTweetedBy(user);
         tweet.setPublished(new Date());
-        
+        tweet.fillTags();
+
         Tweet persistedTweet = tweetService.tweet(tweet);
-       TweetDTO persistedTweetDTO = new TweetDTO(
-               persistedTweet.getId(),
-               persistedTweet.getTweetedBy().getUsername(),
-               persistedTweet.getMessage(),
-               persistedTweet.getPublished(),
-               persistedTweet.getTags(),
-               persistedTweet.getLikes(),
-               persistedTweet.getMentions()
-       );
+        TweetDTO persistedTweetDTO = new TweetDTO(
+                persistedTweet.getId(),
+                persistedTweet.getTweetedBy().getUsername(),
+                persistedTweet.getMessage(),
+                persistedTweet.getPublished(),
+                persistedTweet.getTags(),
+                persistedTweet.getLikes(),
+                persistedTweet.getMentions()
+        );
+        
+        System.out.println("Tags: " + persistedTweet.getTags());
         return Response.ok(persistedTweetDTO).build();
     }
 

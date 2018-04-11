@@ -24,7 +24,7 @@ public class TweetService {
         List<User> mentions = new ArrayList<>();
 
         String prefixedString = " ".concat(message);
-        Matcher m = Pattern.compile("(?:\\s#)([A-Za-z0-9_]+)").matcher(prefixedString);
+        Matcher m = Pattern.compile("(?:\\s@)([A-Za-z0-9_]+)").matcher(prefixedString);
         while (m.find()) {
             List<User> users = userDAO.findByUsername(m.group(1));
             if (!users.isEmpty()) {

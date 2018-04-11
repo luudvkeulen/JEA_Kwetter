@@ -102,7 +102,7 @@ public class TweetDTO implements Serializable {
 
         this.mentions = new ArrayList<>();
         mentions.forEach((u) -> {
-            this.likes.add(u.getUsername());
+            this.mentions.add(u.getUsername());
         });
     }
 
