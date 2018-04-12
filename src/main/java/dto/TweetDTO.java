@@ -13,11 +13,13 @@ public class TweetDTO implements Serializable {
     private Long id;
     private String tweetedByString;
     private String tweetedBy_url;
+    private String tweetedBy_fullname;
     private String message;
     private Date published;
     private List<String> tags;
     private List<String> likes;
     private List<String> mentions;
+    private boolean hasBeenLiked;
 
     public Long getId() {
         return id;
@@ -51,6 +53,10 @@ public class TweetDTO implements Serializable {
     public List<String> getMentions() {
         return mentions;
     }
+    
+    public boolean getHasBeenLiked() {
+        return hasBeenLiked;
+    }
 
     public void setId(Long id) {
         this.id = id;
@@ -82,6 +88,18 @@ public class TweetDTO implements Serializable {
 
     public void setMentions(List<String> mentions) {
         this.mentions = mentions;
+    }
+    
+    public void setHasBeenLiked(boolean liked) {
+        this.hasBeenLiked = liked;
+    }
+
+    public String getTweetedBy_fullname() {
+        return tweetedBy_fullname;
+    }
+
+    public void setTweetedBy_fullname(String tweetedBy_fullname) {
+        this.tweetedBy_fullname = tweetedBy_fullname;
     }
 
     public TweetDTO() {

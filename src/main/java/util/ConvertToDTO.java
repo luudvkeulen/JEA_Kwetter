@@ -50,6 +50,7 @@ public class ConvertToDTO {
                     t.getTags(),
                     t.getLikes(),
                     t.getMentions());
+            tweetDTO.setTweetedBy_fullname(t.getTweetedBy().getFirstName() + " " + t.getTweetedBy().getLastName());
             tweetDTOs.add(tweetDTO);
         }
 

@@ -55,27 +55,33 @@ public class TweetService {
         return tweetDAO.findByMessage(query);
     }
 
-    public void like(long tweetid, long userid) {
+    public Tweet like(long tweetid, long userid) {
         Tweet tweet = tweetDAO.findById(tweetid);
         User user = userDAO.findById(userid);
+        System.out.println("User and tweet: " + user + " - " + tweet);
         if (tweet != null && user != null) {
             tweet.like(user);
+            return tweet;
         }
+        
+        return null;
     }
 
-    public void unlike(long tweetid, long userid) {
+    public Tweet unlike(long tweetid, long userid) {
         Tweet tweet = tweetDAO.findById(tweetid);
         User user = userDAO.findById(userid);
         if (tweet != null && user != null) {
             tweet.unlike(user);
+            return tweet;
         }
+        return null;
     }
 
     public void remove(long tweetid) {
         Tweet tweet = tweetDAO.findById(tweetid);
         tweetDAO.delete(tweet);
     }
-    
+
     public List<Tweet> getTweetsFromUser(String username) {
         return tweetDAO.getTweetsFromUser(username);
     }

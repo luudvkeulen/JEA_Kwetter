@@ -109,7 +109,62 @@ public class UserResource {
         String username = securityContext.getUserPrincipal().getName();
         List<Tweet> timelineRaw = userService.getTimeLine(username, offset, limit);
         List<TweetDTO> timelineDTO = ConvertToDTO.TWEETSTODTOS(timelineRaw);
+        for(TweetDTO tdto : timelineDTO) {
+            if(tdto.getLikes().contains(username)) {
+                tdto.setHasBeenLiked(true);
+            }
+        }
         return Response.ok(timelineDTO).build();
+    }
+    
+    @PUT
+    @Path("tweets/{tweetid}/like")
+    public Response like(@PathParam("tweetid") long tweetid) {
+        String username = securityContext.getUserPrincipal().getName();
+        List<User> users = userService.findByUsername(username);
+        if(users == null || users.size() != 1) {
+            return Response.serverError().build();
+        }
+        Tweet t = tweetService.like(tweetid, users.get(0).getId());
+        if(t == null) {
+            return Response.serverError().build();
+        }
+        TweetDTO tweetDTO = new TweetDTO(
+                t.getId(),
+                t.getTweetedBy().getUsername(),
+                t.getMessage(),
+                t.getPublished(),
+                t.getTags(),
+                t.getLikes(),
+                t.getMentions()
+        );
+        tweetDTO.setHasBeenLiked(true);
+        return Response.ok(tweetDTO).build();
+    }
+    
+    @PUT
+    @Path("tweets/{tweetid}/unlike")
+    public Response unlike(@PathParam("tweetid") long tweetid) {
+        String username = securityContext.getUserPrincipal().getName();
+        List<User> users = userService.findByUsername(username);
+        if(users == null || users.size() != 1) {
+            return Response.serverError().build();
+        }
+        Tweet t = tweetService.unlike(tweetid, users.get(0).getId());
+        if(t == null) {
+            return Response.serverError().build();
+        }
+        TweetDTO tweetDTO = new TweetDTO(
+                t.getId(),
+                t.getTweetedBy().getUsername(),
+                t.getMessage(),
+                t.getPublished(),
+                t.getTags(),
+                t.getLikes(),
+                t.getMentions()
+        );
+        tweetDTO.setHasBeenLiked(false);
+        return Response.ok(tweetDTO).build();
     }
 
     @PUT
