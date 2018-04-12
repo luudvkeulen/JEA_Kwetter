@@ -138,6 +138,7 @@ public class UserResource {
                 t.getLikes(),
                 t.getMentions()
         );
+        tweetDTO.setTweetedBy_fullname(t.getTweetedBy().getFirstName() + " " + t.getTweetedBy().getLastName());
         tweetDTO.setHasBeenLiked(true);
         return Response.ok(tweetDTO).build();
     }
