@@ -5,6 +5,7 @@ import dao.UserDAO;
 import domain.Tweet;
 import domain.User;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,7 +25,7 @@ public class TweetService {
         List<User> mentions = new ArrayList<>();
 
         String prefixedString = " ".concat(message);
-        Matcher m = Pattern.compile("(?:\\s#)([A-Za-z0-9_]+)").matcher(prefixedString);
+        Matcher m = Pattern.compile("(?:\\s@)([A-Za-z0-9_]+)").matcher(prefixedString);
         while (m.find()) {
             List<User> users = userDAO.findByUsername(m.group(1));
             if (!users.isEmpty()) {
@@ -43,36 +44,49 @@ public class TweetService {
         return tweetDAO.findById(id);
     }
 
-    public void tweet(Tweet tweet) {
+    public Tweet tweet(Tweet tweet) {
         findMentions(tweet.getMessage()).forEach(u
                 -> tweet.addMention(u)
         );
 
-        tweetDAO.insert(tweet);
+        return tweetDAO.insert(tweet);
     }
 
     public List<Tweet> findByMessage(String query) {
         return tweetDAO.findByMessage(query);
     }
 
-    public void like(long tweetid, long userid) {
+    public Tweet like(long tweetid, long userid) {
         Tweet tweet = tweetDAO.findById(tweetid);
         User user = userDAO.findById(userid);
+        System.out.println("User and tweet: " + user + " - " + tweet);
         if (tweet != null && user != null) {
             tweet.like(user);
+            return tweet;
         }
+        
+        return null;
     }
 
-    public void unlike(long tweetid, long userid) {
+    public Tweet unlike(long tweetid, long userid) {
         Tweet tweet = tweetDAO.findById(tweetid);
         User user = userDAO.findById(userid);
         if (tweet != null && user != null) {
             tweet.unlike(user);
+            return tweet;
         }
+        return null;
     }
 
     public void remove(long tweetid) {
         Tweet tweet = tweetDAO.findById(tweetid);
         tweetDAO.delete(tweet);
+    }
+
+    public List<Tweet> getTweetsFromUser(String username, int amount) {
+        List<Tweet> tweets = tweetDAO.getTweetsFromUser(username);
+        Collections.sort(tweets);
+        int otherIndex = (tweets.size() > amount) ? amount : tweets.size();
+        return tweets.subList(0, otherIndex);
     }
 }

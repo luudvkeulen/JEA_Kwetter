@@ -1,50 +1,50 @@
 package service;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTCreationException;
 import dao.UserDAO;
 import dao.UserGroupDAO;
 import domain.Tweet;
 import domain.User;
 import domain.UserGroup;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import org.apache.commons.codec.digest.DigestUtils;
 
 @Stateless
 public class UserService {
-    
+
     @Inject
     private UserDAO userDAO;
 
     @Inject
     private UserGroupDAO userGroupDAO;
 
+    public List<User> allUsers(int offset, int limit) {
+        List<User> users = userDAO.findAll();
+        int toIndex = users.size() < (offset + limit) ? users.size() : (offset + limit);
+        return users.subList(offset, toIndex);
+    }
+    
     public List<User> allUsers() {
-        return userDAO.findAll();
+        return allUsers(0, 20);
     }
 
     public List<User> findByUsername(String username) {
         return userDAO.findByUsername(username);
     }
 
-    public void register(User u) {
-        userDAO.insert(u);
+    public boolean register(User u) {
+        return userDAO.insert(u);
     }
 
-    public Set<User> findFollowing(long id) {
-        return userDAO.findAllFollowing(id);
+    public List<User> findFollowing(String username) {
+        return new ArrayList<>(userDAO.findAllFollowing(username));
     }
 
-    public Set<User> findFollowers(long id) {
-        return userDAO.findAllFollowers(id);
+    public List<User> findFollowers(String username) {
+        return new ArrayList<>(userDAO.findAllFollowers(username));
     }
 
     public void follow(long userid, long otheruserid) {
@@ -90,45 +90,24 @@ public class UserService {
 
         persistedUser.removeGroup(persistedGroup);
     }
-
-    public List<Tweet> getTimeLine(long userid) {
-        User user = userDAO.findById(userid);
-        if (user == null) {
+    
+    public List<Tweet> getTimeLine(String username, int offset, int limit) {
+        List<User> users = userDAO.findByUsername(username);
+        if (users == null || users.size() != 1) {
             return new ArrayList<>();
         }
-
+        User user = users.get(0);
+        
         List<Tweet> tweets = new ArrayList<>();
         Set<User> following = user.getFollowers();
         for (User u : following) {
             Set<Tweet> userTweets = u.getTweets();
             tweets.addAll(userTweets);
         }
+        tweets.addAll(user.getTweets());
         Collections.sort(tweets);
-        return tweets;
+        int toIndex = tweets.size() < (offset + limit) ? tweets.size() : (offset + limit);
+        return tweets.subList(offset, toIndex);
     }
 
-    public boolean authenticate(String username, String password) {
-        List<User> users = userDAO.findByUsername(username);
-        if (users.isEmpty()) {
-            return false;
-        }
-
-        User user = users.get(0);
-
-        String hashedPw = DigestUtils.sha512Hex(password);
-        return hashedPw.equals(user.getPassword());
-    }
-
-    public String issueToken(String login) {
-        Algorithm algorithm;
-        String token = "";
-        try {
-            algorithm = Algorithm.HMAC512("supersecret");
-            token = JWT.create().withSubject(login).withIssuer("Luud").sign(algorithm);
-        } catch (UnsupportedEncodingException exception) {
-            exception.printStackTrace();
-        }
-
-        return token;
-    }
 }

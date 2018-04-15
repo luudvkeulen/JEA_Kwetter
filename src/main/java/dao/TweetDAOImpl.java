@@ -28,9 +28,9 @@ public class TweetDAOImpl implements TweetDAO {
     }
 
     @Override
-    public boolean insert(Tweet tweet) {
+    public Tweet insert(Tweet tweet) {
         em.persist(tweet);
-        return true;
+        return tweet;
     }
 
     @Override
@@ -43,6 +43,11 @@ public class TweetDAOImpl implements TweetDAO {
     public boolean delete(Tweet tweet) {
         em.remove(tweet);
         return true;
+    }
+
+    @Override
+    public List<Tweet> getTweetsFromUser(String username) {
+        return em.createNamedQuery("Tweet.getFromUser").setParameter("username", username).getResultList();
     }
 
 }

@@ -1,7 +1,7 @@
 version: '3.5'
 
 services:
-  mysql:
+  mysql-prod:
     image: mysql/mysql-server:5.7.21
     environment: 
       - MYSQL_ROOT_PASSWORD=root
@@ -9,12 +9,12 @@ services:
       - MYSQL_USER=kwetter
       - MYSQL_PASSWORD=12345678
 
-  payara:
+  payara-prod:
     build: .
     ports:
       - "8888:8080"
       - "4949:4848"
     links:
-      - mysql
+      - mysql-prod
     depends_on:
-      - mysql
+      - mysql-prod

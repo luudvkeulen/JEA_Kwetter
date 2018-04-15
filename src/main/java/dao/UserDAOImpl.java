@@ -13,8 +13,8 @@ import javax.persistence.PersistenceContext;
 @Stateless
 public class UserDAOImpl implements UserDAO {
 
-    private static final Logger LOGGER = Logger.getLogger( UserDAOImpl.class.getName() );
-    
+    private static final Logger LOGGER = Logger.getLogger(UserDAOImpl.class.getName());
+
     @PersistenceContext
     EntityManager em;
 
@@ -35,25 +35,25 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public List<User> findByUsername(String username) {
-        return em.createNamedQuery("User.findByUsername").setParameter("username", username).getResultList();
+        return em.createNamedQuery("User.findByUsername").setParameter("username", "%"+ username + "%").getResultList();
     }
 
     @Override
-    public Set<User> findAllFollowers(long id) {
-        User u = em.find(User.class, id);
-        if (u == null) {
-            return new HashSet<>();
+    public Set<User> findAllFollowers(String username) {
+        List<User> users = findByUsername(username);
+        if (users != null && users.size() == 1) {
+            return users.get(0).getFollowers();
         }
-        return u.getFollowers();
+        return new HashSet<>();
     }
 
     @Override
-    public Set<User> findAllFollowing(long id) {
-        User u = em.find(User.class, id);
-        if (u == null) {
-            return new HashSet<>();
+    public Set<User> findAllFollowing(String username) {
+        List<User> users = findByUsername(username);
+        if (users != null && users.size() == 1) {
+            return users.get(0).getFollowing();
         }
-        return u.getFollowing();
+        return new HashSet<>();
     }
 
     @Override
