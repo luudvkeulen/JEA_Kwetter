@@ -48,7 +48,7 @@ public class Init {
         //Generate users;
         List<User> users = new ArrayList<>();
         for (int i = 0; i < usercount; i++) {
-            User tempUser = new User("test" + i + "@test.com", "test" + i, "12345678", pictures[new Random().nextInt(pictures.length)], "test" + i + ".nl", "TestFN" + i, "TestLN" + 1, "Hello I am test" + i, "Eindhoven");
+            User tempUser = new User("test" + i + "@test.com", "test" + i, "12345678", pictures[new Random().nextInt(pictures.length)], "test" + i + ".nl", "TestFN" + i, "TestLN" + i, "Hello I am test" + i, "Eindhoven");
             tempUser.addGroup(userGroup);
             userDAO.insert(tempUser);
             users.add(tempUser);
