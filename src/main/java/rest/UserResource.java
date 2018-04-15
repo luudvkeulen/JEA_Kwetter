@@ -95,8 +95,8 @@ public class UserResource {
                 persistedTweet.getLikes(),
                 persistedTweet.getMentions()
         );
+        persistedTweetDTO.setTweetedBy_fullname(persistedTweet.getTweetedBy().getFirstName() + " " + persistedTweet.getTweetedBy().getLastName());
         
-        System.out.println("Tags: " + persistedTweet.getTags());
         return Response.ok(persistedTweetDTO).build();
     }
 

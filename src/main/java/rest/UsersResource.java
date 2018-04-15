@@ -94,8 +94,11 @@ public class UsersResource {
 
     @GET
     @Path("{username}/tweets")
-    public Response tweets(@PathParam("username") String username) {
-        List<Tweet> tweets = tweetService.getTweetsFromUser(username);
+    public Response tweets(
+            @PathParam("username") String username,
+            @DefaultValue("10") @QueryParam("offset") int amount
+    ) {
+        List<Tweet> tweets = tweetService.getTweetsFromUser(username, amount);
         List<TweetDTO> tweetDTOs = ConvertToDTO.TWEETSTODTOS(tweets);
         return Response.ok(tweetDTOs).build();
     }

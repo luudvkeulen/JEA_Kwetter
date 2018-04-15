@@ -5,6 +5,7 @@ import dao.UserDAO;
 import domain.Tweet;
 import domain.User;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -82,7 +83,10 @@ public class TweetService {
         tweetDAO.delete(tweet);
     }
 
-    public List<Tweet> getTweetsFromUser(String username) {
-        return tweetDAO.getTweetsFromUser(username);
+    public List<Tweet> getTweetsFromUser(String username, int amount) {
+        List<Tweet> tweets = tweetDAO.getTweetsFromUser(username);
+        Collections.sort(tweets);
+        int otherIndex = (tweets.size() > amount) ? amount : tweets.size();
+        return tweets.subList(0, otherIndex);
     }
 }
