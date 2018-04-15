@@ -12,7 +12,7 @@ public interface TweetDAO {
     List<Tweet> findByMessage(String query);
     
     List<Tweet> getTweetsFromUser(String username);
-
+    
     Tweet insert(Tweet tweet);
 
     boolean update(Tweet tweet);

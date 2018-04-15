@@ -132,7 +132,7 @@ public class Tweet implements Serializable, Comparable<Tweet> {
     public void addMention(User user) {
         this.mentions.add(user);
     }
-    
+
     public void fillTags() {
         this.tags = this.findTags(message);
     }
