@@ -29,18 +29,10 @@ public class TweetResource {
     }
 
     @GET
-    @Path("get/{id}")
+    @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Tweet get(@PathParam("id") long id) {
         return tweetService.getTweet(id);
-    }
-
-    @GET
-    @Path("getLatest/{userid}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<Tweet> getLatest(@PathParam("userid") long userid) {
-        //TODO implement
-        return null;
     }
 
     @GET
@@ -49,32 +41,10 @@ public class TweetResource {
     public List<Tweet> findByMessage(@PathParam("query") String query) {
         return tweetService.findByMessage(query);
     }
-
-    /* POST */
-    @POST
-    @Path("tweet/{userid}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void tweet(@PathParam("userid") long id, Tweet tweet) {
-        tweetService.tweet(tweet);
-    }
-    
-    @POST
-    @Path("like/{tweetid}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void like(@PathParam("tweetid") long tweetid, long userid) {
-        tweetService.like(tweetid, userid);
-    }
-    
-    @POST
-    @Path("unlike/{tweetid}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void unlike(@PathParam("tweetid") long tweetid, long userid) {
-        tweetService.unlike(tweetid, userid);
-    }
     
     /* DELETE */
     @DELETE
-    @Path("remove/{tweetid}")
+    @Path("{tweetid}")
     public void remove(@PathParam("tweetid") long tweetid) {
         tweetService.remove(tweetid);
     }
