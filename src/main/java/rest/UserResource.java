@@ -4,11 +4,16 @@ import domain.Tweet;
 import domain.User;
 import dto.TweetDTO;
 import dto.UserDTO;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.websocket.EncodeException;
+import javax.websocket.Session;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
@@ -25,6 +30,8 @@ import javax.ws.rs.core.SecurityContext;
 import service.TweetService;
 import service.UserService;
 import util.ConvertToDTO;
+import websocket.ServerEndpoint;
+import static websocket.ServerEndpoint.peers;
 
 /**
  * This is a rest resource which is available for the currently logged in user.
@@ -74,7 +81,7 @@ public class UserResource {
     @PUT
     @Path("tweets")
     public Response tweet(TweetDTO tweetDTO) {
-        
+
         String username = securityContext.getUserPrincipal().getName();
         List<User> users = userService.findByUsername(username);
         if (users == null || users.isEmpty()) {
@@ -96,7 +103,14 @@ public class UserResource {
                 persistedTweet.getMentions()
         );
         persistedTweetDTO.setTweetedBy_fullname(persistedTweet.getTweetedBy().getFirstName() + " " + persistedTweet.getTweetedBy().getLastName());
-        
+        try {
+            for (Session peer : peers) {
+                peer.getBasicRemote().sendObject(persistedTweetDTO);
+            }
+        } catch (IOException | EncodeException ex) {
+            Logger.getLogger(UserResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         return Response.ok(persistedTweetDTO).build();
     }
 
@@ -109,24 +123,24 @@ public class UserResource {
         String username = securityContext.getUserPrincipal().getName();
         List<Tweet> timelineRaw = userService.getTimeLine(username, offset, limit);
         List<TweetDTO> timelineDTO = ConvertToDTO.TWEETSTODTOS(timelineRaw);
-        for(TweetDTO tdto : timelineDTO) {
-            if(tdto.getLikes().contains(username)) {
+        for (TweetDTO tdto : timelineDTO) {
+            if (tdto.getLikes().contains(username)) {
                 tdto.setHasBeenLiked(true);
             }
         }
         return Response.ok(timelineDTO).build();
     }
-    
+
     @PUT
     @Path("tweets/{tweetid}/like")
     public Response like(@PathParam("tweetid") long tweetid) {
         String username = securityContext.getUserPrincipal().getName();
         List<User> users = userService.findByUsername(username);
-        if(users == null || users.size() != 1) {
+        if (users == null || users.size() != 1) {
             return Response.serverError().build();
         }
         Tweet t = tweetService.like(tweetid, users.get(0).getId());
-        if(t == null) {
+        if (t == null) {
             return Response.serverError().build();
         }
         TweetDTO tweetDTO = new TweetDTO(
@@ -142,17 +156,17 @@ public class UserResource {
         tweetDTO.setHasBeenLiked(true);
         return Response.ok(tweetDTO).build();
     }
-    
+
     @PUT
     @Path("tweets/{tweetid}/unlike")
     public Response unlike(@PathParam("tweetid") long tweetid) {
         String username = securityContext.getUserPrincipal().getName();
         List<User> users = userService.findByUsername(username);
-        if(users == null || users.size() != 1) {
+        if (users == null || users.size() != 1) {
             return Response.serverError().build();
         }
         Tweet t = tweetService.unlike(tweetid, users.get(0).getId());
-        if(t == null) {
+        if (t == null) {
             return Response.serverError().build();
         }
         TweetDTO tweetDTO = new TweetDTO(
